@@ -5,6 +5,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:1.5.0'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.2'
+        classpath 'com.github.dcendents:android-maven-plugin:1.2'
     }
 }
 
@@ -20,9 +21,12 @@ apply plugin: 'com.jfrog.bintray'
 ext {
     PUBLISH_GROUP_ID = 'com.urbandroid.sleep'
     PUBLISH_ARTIFACT_ID = 'captcha-support'
-    PUBLISH_VERSION = '0.0.3'
+    PUBLISH_VERSION = '0.0.6'
 }
- 
+
+// from: 'https://raw.githubusercontent.com/blundell/release-android-library/master/android-release-aar.gradle'
+apply from: './release-aar.gradle'
+
 android {
     compileSdkVersion 23
     buildToolsVersion '23.0.1'
@@ -42,10 +46,14 @@ dependencies {
     compile 'com.android.support:support-annotations:23.1.1'
 }
 
+
+
 Properties props = new Properties()
 props.load(project.rootProject.file('local.properties').newDataInputStream())
 def bintrayUser = props.getProperty('bintray.user')
 def bintrayKey = props.getProperty('bintray.key')
+def bintrayVersionName = ext.PUBLISH_VERSION
+def bintrayVcsTag = ext.PUBLISH_VERSION
 
 bintray {
     user = bintrayUser
@@ -55,10 +63,10 @@ bintray {
         name = 'com.urbandroid.sleep'
 
         version {
-            name = project.PUBLISH_VERSION
+            name = bintrayVersionName
             desc = 'Sleep as Android: Captcha Support library'
             released  = new Date()
-            vcsTag = project.PUBLISH_VERSION
+            vcsTag = bintrayVcsTag
         }
 
         licenses = ['Apache-2.0']
@@ -70,5 +78,3 @@ bintray {
 
 
  
-// from: 'https://raw.githubusercontent.com/blundell/release-android-library/master/android-release-aar.gradle'
-apply from: './release-aar.gradle'
