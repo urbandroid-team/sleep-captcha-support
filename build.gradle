@@ -1,0 +1,74 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.5.0'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.2'
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+    }
+}
+
+apply plugin: 'com.android.library'
+apply plugin: 'com.jfrog.bintray'
+
+ext {
+    PUBLISH_GROUP_ID = 'com.urbandroid.sleep'
+    PUBLISH_ARTIFACT_ID = 'captcha-support'
+    PUBLISH_VERSION = '0.0.3'
+}
+ 
+android {
+    compileSdkVersion 23
+    buildToolsVersion '23.0.1'
+
+    defaultConfig {
+        minSdkVersion 9
+        targetSdkVersion 23
+    }
+
+    lintOptions {
+        abortOnError true
+    }
+
+}
+
+dependencies {
+    compile 'com.android.support:support-annotations:23.1.1'
+}
+
+Properties props = new Properties()
+props.load(project.rootProject.file('local.properties').newDataInputStream())
+def bintrayUser = props.getProperty('bintray.user')
+def bintrayKey = props.getProperty('bintray.key')
+
+bintray {
+    user = bintrayUser
+    key =  bintrayKey
+    pkg {
+        repo = 'maven'
+        name = 'com.urbandroid.sleep'
+
+        version {
+            name = project.PUBLISH_VERSION
+            desc = 'Sleep as Android: Captcha Support library'
+            released  = new Date()
+            vcsTag = project.PUBLISH_VERSION
+        }
+
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/urbandroid-team/sleep-captcha-support.git'
+        websiteUrl = 'https://github.com/urbandroid-team/sleep-captcha-support'
+    }
+    configurations = ['archives']
+}
+
+
+ 
+// from: 'https://raw.githubusercontent.com/blundell/release-android-library/master/android-release-aar.gradle'
+apply from: './release-aar.gradle'

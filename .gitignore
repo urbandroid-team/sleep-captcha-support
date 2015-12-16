@@ -1,0 +1,7 @@
+.idea
+.gradle
+gradle
+build
+gradlew*
+local.properties
+sleep-captcha-support.iml
