@@ -1,2 +1,2 @@
-# sleep-captcha-support-library
-Sleep as Android - Captcha support library
+# sleep-captcha-support
+Sleep as Android - Captcha support
