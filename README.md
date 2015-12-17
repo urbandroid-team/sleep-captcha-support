@@ -22,7 +22,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.urbandroid.sleep:captcha-support:0.0.6@aar'
+    compile 'com.urbandroid.sleep:captcha-support:0.0.8@aar'
 }
 ```
 
