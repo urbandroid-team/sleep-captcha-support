@@ -16,9 +16,7 @@ to your `build.gradle` file to use the library:
 
 ```groovy
 repositories {
-    maven {
-        url "https://dl.bintray.com/urbandroid/maven/"
-    }
+    jcenter()
 }
 
 dependencies {
