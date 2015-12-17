@@ -55,6 +55,7 @@ def bintrayKey = props.getProperty('bintray.key')
 def bintrayVersionName = ext.PUBLISH_VERSION
 def bintrayVcsTag = ext.PUBLISH_VERSION
 
+/*
 bintray {
     user = bintrayUser
     key =  bintrayKey
@@ -75,6 +76,7 @@ bintray {
     }
     configurations = ['archives']
 }
+*/
 
 
  

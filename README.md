@@ -32,4 +32,4 @@ dependencies {
 Read more on the [website][website].
 
 [issues]: https://github.com/urbandroid-team/sleep-captcha-support/issues
-[website]: http://sleep.urbandroid.org
+[website]: http://sleep.urbandroid.org/documentation/developer-api/captcha-api
