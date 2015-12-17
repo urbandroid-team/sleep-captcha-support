@@ -16,12 +16,9 @@ import com.urbandroid.sleep.captcha.launcher.BaseCaptchaLauncher;
 import com.urbandroid.sleep.captcha.launcher.CaptchaLauncher;
 
 import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_ACTION_CONFIG;
-import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_BACK_INTENT_ALIVE;
-import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_BACK_INTENT_SOLVED;
 import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_CONFIG_DIFFICULTY;
 import static com.urbandroid.sleep.captcha.CaptchaConstant.PREVIEW;
 import static com.urbandroid.sleep.captcha.CaptchaConstant.SUCCESS;
-import static com.urbandroid.sleep.captcha.CaptchaConstant.VERY_SIMPLE;
 
 public class BaseCaptchaSupport implements CaptchaSupport {
 
@@ -56,19 +53,19 @@ public class BaseCaptchaSupport implements CaptchaSupport {
     @CaptchaMode
     public int getMode() {
         if (isPreviewMode()) {
-            return CaptchaConstant.CAPTCHA_MODE_PREVIEW;
+            return CaptchaMode.CAPTCHA_MODE_PREVIEW;
         }
         if (isConfigurationMode()) {
-            return CaptchaConstant.CAPTCHA_MODE_CONFIGURATION;
+            return CaptchaMode.CAPTCHA_MODE_CONFIGURATION;
         }
-        return CaptchaConstant.CAPTCHA_MODE_OPERATIONAL;
+        return CaptchaMode.CAPTCHA_MODE_OPERATIONAL;
     }
 
     @Override
     @SuppressWarnings("ResourceType")
     @CaptchaDifficulty
     public int getDifficulty(){
-        return intent.getIntExtra(CAPTCHA_CONFIG_DIFFICULTY, VERY_SIMPLE);
+        return intent.getIntExtra(CAPTCHA_CONFIG_DIFFICULTY, CaptchaDifficulty.VERY_SIMPLE);
     }
 
     @Override
@@ -76,7 +73,7 @@ public class BaseCaptchaSupport implements CaptchaSupport {
         if (!isOperationalMode()) {
             return;
         }
-        send(CAPTCHA_BACK_INTENT_ALIVE, null);
+        send(CaptchaEvent.CAPTCHA_BACK_INTENT_ALIVE, null);
     }
 
     @Override
@@ -86,7 +83,7 @@ public class BaseCaptchaSupport implements CaptchaSupport {
 
     @Override
     public void solved(final @Nullable IntentExtraSetter extraSetter){
-        send(CAPTCHA_BACK_INTENT_SOLVED, extraSetter);
+        send(CaptchaEvent.CAPTCHA_BACK_INTENT_SOLVED, extraSetter);
     }
 
     @Override
@@ -110,10 +107,10 @@ public class BaseCaptchaSupport implements CaptchaSupport {
             return;
         }
         switch (event) {
-            case CAPTCHA_BACK_INTENT_ALIVE:
+            case CaptchaEvent.CAPTCHA_BACK_INTENT_ALIVE:
                 context.startService(callbackIntent);
                 break;
-            case CAPTCHA_BACK_INTENT_SOLVED:
+            case CaptchaEvent.CAPTCHA_BACK_INTENT_SOLVED:
                 callbackIntent.putExtra(SUCCESS, true);
                 if (extraSetter != null) {
                     extraSetter.setExtras(callbackIntent);

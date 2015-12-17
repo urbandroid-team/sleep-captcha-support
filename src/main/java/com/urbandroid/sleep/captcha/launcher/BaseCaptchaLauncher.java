@@ -8,17 +8,15 @@ import android.support.annotation.Nullable;
 import com.urbandroid.sleep.captcha.CallbackReceiver;
 import com.urbandroid.sleep.captcha.RemoteCaptchaCallbackListener;
 import com.urbandroid.sleep.captcha.annotation.CaptchaDifficulty;
+import com.urbandroid.sleep.captcha.annotation.CaptchaEvent;
+import com.urbandroid.sleep.captcha.annotation.SleepOperation;
 import com.urbandroid.sleep.captcha.domain.CaptchaInfo;
 
 import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_ACTION_ALIVE;
 import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_ACTION_LAUNCH;
 import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_ACTION_SOLVED;
 import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_BACK_INFO;
-import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_BACK_INTENT_ALIVE;
-import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_BACK_INTENT_SOLVED;
 import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_CONFIG_DIFFICULTY;
-import static com.urbandroid.sleep.captcha.CaptchaConstant.OPERATION_NONE;
-import static com.urbandroid.sleep.captcha.CaptchaConstant.VERY_SIMPLE;
 
 public class BaseCaptchaLauncher implements CaptchaLauncher {
 
@@ -30,7 +28,7 @@ public class BaseCaptchaLauncher implements CaptchaLauncher {
 
     @Override
     public void startCaptcha(final @NonNull CaptchaInfo captchaInfo, final @Nullable RemoteCaptchaCallbackListener callbackListener) {
-        context.startActivity(prepareCaptchaIntent(captchaInfo, VERY_SIMPLE, Intent.FLAG_ACTIVITY_NEW_TASK));
+        context.startActivity(prepareCaptchaIntent(captchaInfo, CaptchaDifficulty.VERY_SIMPLE, Intent.FLAG_ACTIVITY_NEW_TASK));
     }
 
     @Override
@@ -53,11 +51,11 @@ public class BaseCaptchaLauncher implements CaptchaLauncher {
                 .setClassName(captchaInfo.getPackageName(), captchaInfo.getActivityName())
                 .setFlags(flags)
                 // back call intents
-                .putExtra(CAPTCHA_BACK_INTENT_SOLVED, solvedCaptchaIntent)
-                .putExtra(CAPTCHA_BACK_INTENT_ALIVE, captchaAliveIntent)
+                .putExtra(CaptchaEvent.CAPTCHA_BACK_INTENT_SOLVED, solvedCaptchaIntent)
+                .putExtra(CaptchaEvent.CAPTCHA_BACK_INTENT_ALIVE, captchaAliveIntent)
                 // config params
                 .putExtra(CAPTCHA_CONFIG_DIFFICULTY, difficulty)
-                .putExtra(OPERATION_NONE, true);
+                .putExtra(SleepOperation.OPERATION_NONE, true);
     }
 
 

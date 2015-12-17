@@ -80,7 +80,6 @@ public class BaseCaptchaInfo implements CaptchaInfo{
         return configurable;
     }
 
-    @Override
     public void setConfigurable(final boolean configurable) {
         this.configurable = configurable;
     }

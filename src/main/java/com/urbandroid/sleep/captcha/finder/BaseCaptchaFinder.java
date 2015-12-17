@@ -60,7 +60,7 @@ public class BaseCaptchaFinder implements CaptchaFinder {
                     resolveInfo.activityInfo,
                     resolveInfo.activityInfo.loadLabel(packageManager).toString()
             );
-            final CaptchaInfo captchaInfo = findById(result, configInfo.getId());
+            final BaseCaptchaInfo captchaInfo = findById(result, configInfo.getId());
             if (captchaInfo != null) {
                 captchaInfo.setConfigurable(true);
             }
@@ -87,10 +87,10 @@ public class BaseCaptchaFinder implements CaptchaFinder {
     }
 
     @Nullable
-    protected CaptchaInfo findById(final List<CaptchaInfo> infos, final int id) {
+    protected BaseCaptchaInfo findById(final List<CaptchaInfo> infos, final int id) {
         for (final CaptchaInfo info : infos) {
             if (info.getId() == id) {
-                return info;
+                return (BaseCaptchaInfo) info;
             }
         }
         return null;
