@@ -6,18 +6,18 @@ def artifactId = project.PUBLISH_ARTIFACT_ID
 def version = project.PUBLISH_VERSION
 
 def localReleaseDest = "${buildDir}/release/${version}"
-/*
+
 task androidJavadocs(type: Javadoc) {
-    source = android.sourceSets.main.java.srcDirs
-    ext.androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
-    classpath += files(ext.androidJar)
+    source = project.android.sourceSets.main.java.srcDirs
+    classpath += project.files(project.android.getBootClasspath().join(File.pathSeparator))
+    classpath += configurations.javadocDeps
 }
 
 task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
     classifier = 'javadoc'
     from androidJavadocs.destinationDir
 }
-*/
+
 task androidSourcesJar(type: Jar) {
     classifier = 'sources'
     from android.sourceSets.main.java.srcDirs
@@ -52,5 +52,5 @@ generateRelease.dependsOn(zipRelease)
 
 artifacts {
     archives androidSourcesJar
-    //archives androidJavadocsJar
+    archives androidJavadocsJar
 }
