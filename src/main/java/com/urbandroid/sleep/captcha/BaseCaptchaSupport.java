@@ -14,6 +14,7 @@ import com.urbandroid.sleep.captcha.finder.CaptchaFinder;
 import com.urbandroid.sleep.captcha.intent.IntentExtraSetter;
 import com.urbandroid.sleep.captcha.launcher.BaseCaptchaLauncher;
 import com.urbandroid.sleep.captcha.launcher.CaptchaLauncher;
+import com.urbandroid.sleep.captcha.util.IntentUtil;
 
 import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_ACTION_CONFIG;
 import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_CONFIG_DIFFICULTY;
@@ -70,9 +71,6 @@ public class BaseCaptchaSupport implements CaptchaSupport {
 
     @Override
     public void alive() {
-        if (!isOperationalMode()) {
-            return;
-        }
         send(CaptchaEvent.CAPTCHA_BACK_INTENT_ALIVE, null);
     }
 
@@ -97,7 +95,7 @@ public class BaseCaptchaSupport implements CaptchaSupport {
     }
 
     void send(final @CaptchaEvent String event, final @Nullable IntentExtraSetter extraSetter){
-        if (isConfigurationMode() || isPreviewMode()) {
+        if (!isOperationalMode()) {
             return;
         }
 
@@ -115,6 +113,7 @@ public class BaseCaptchaSupport implements CaptchaSupport {
                 if (extraSetter != null) {
                     extraSetter.setExtras(callbackIntent);
                 }
+                Log.i(TAG, IntentUtil.traceIntent(callbackIntent));
                 context.sendBroadcast(callbackIntent);
                 break;
         }

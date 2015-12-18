@@ -6,6 +6,7 @@ import com.urbandroid.sleep.captcha.domain.CaptchaInfo;
 
 public interface RemoteCaptchaCallbackListener {
 
-    void captchaSolved(@NonNull CaptchaInfo captchaInfo);
+    void solved(@NonNull CaptchaInfo captchaInfo);
+    void unsolved(@NonNull CaptchaInfo captchaInfo);
 
 }

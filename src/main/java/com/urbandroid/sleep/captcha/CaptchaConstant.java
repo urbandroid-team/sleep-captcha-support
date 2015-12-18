@@ -3,6 +3,7 @@ package com.urbandroid.sleep.captcha;
 public interface CaptchaConstant {
 
     String TAG = "captcha-support";
+    String SLEEP_PACKAGE = "com.urbandroid.sleep";
 
     String CAPTCHA_BACK_INFO  = "captchaInfo";
 

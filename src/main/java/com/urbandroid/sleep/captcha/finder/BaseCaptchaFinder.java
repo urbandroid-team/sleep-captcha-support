@@ -42,11 +42,14 @@ public class BaseCaptchaFinder implements CaptchaFinder {
         // look up all activities with action captcha launch in intent-filter
         final Intent launchCaptchaIntent = new Intent(CAPTCHA_ACTION_LAUNCH);
         for (final ResolveInfo resolveInfo : packageManager.queryIntentActivities(launchCaptchaIntent, PackageManager.GET_META_DATA)) {
+            Log.i(TAG, "Found: " + resolveInfo);
+
             final BaseCaptchaInfo captchaInfo = BaseCaptchaInfo.build(
                     context,
                     resolveInfo.activityInfo,
                     resolveInfo.activityInfo.loadLabel(packageManager).toString()
             );
+            Log.i(TAG, "\tCaptcha: " + captchaInfo);
             if (filter == null || filter.apply(captchaInfo)) {
                 result.add(captchaInfo);
             }
@@ -73,9 +76,14 @@ public class BaseCaptchaFinder implements CaptchaFinder {
             }
         });
 
-        for (final CaptchaInfo captchaInfo : result) {
-            Log.i(TAG, captchaInfo.toString());
+        if (!result.isEmpty()) {
+            for (final CaptchaInfo captchaInfo : result) {
+                Log.i(TAG, captchaInfo.toString());
+            }
+        } else {
+            Log.i(TAG, "No captcha found");
         }
+
 
         return result;
     }

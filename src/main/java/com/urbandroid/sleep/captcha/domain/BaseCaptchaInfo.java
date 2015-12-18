@@ -6,6 +6,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import com.urbandroid.sleep.captcha.CaptchaConstant;
+
 import static com.urbandroid.sleep.captcha.CaptchaConstant.META_BACK_COMPATIBILITY_ID;
 import static com.urbandroid.sleep.captcha.CaptchaConstant.META_HAS_DIFFICULTY;
 import static com.urbandroid.sleep.captcha.CaptchaConstant.META_ORDER;
@@ -29,7 +31,8 @@ public class BaseCaptchaInfo implements CaptchaInfo{
         this.activityName = activityInfo.name;
         this.label = label;
         this.isExternal = !context.getPackageName().equals(packageName);
-        if (isExternal || activityInfo.metaData == null || !activityInfo.metaData.containsKey(META_BACK_COMPATIBILITY_ID)) {
+        final boolean isFromSleep = CaptchaConstant.SLEEP_PACKAGE.equals(packageName);
+        if ((isExternal && !isFromSleep) || activityInfo.metaData == null || !activityInfo.metaData.containsKey(META_BACK_COMPATIBILITY_ID)) {
             id = (packageName + activityName).hashCode();
         } else {
             id = activityInfo.metaData.getInt(META_BACK_COMPATIBILITY_ID);

@@ -2,7 +2,6 @@ package com.urbandroid.sleep.captcha.launcher;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.urbandroid.sleep.captcha.RemoteCaptchaCallbackListener;
 import com.urbandroid.sleep.captcha.annotation.CaptchaDifficulty;
@@ -12,12 +11,12 @@ public interface CaptchaLauncher {
 
     void startCaptcha(
             @NonNull CaptchaInfo captchaInfo,
-            @Nullable RemoteCaptchaCallbackListener callbackListener
+            @NonNull RemoteCaptchaCallbackListener callbackListener
     );
 
     void startCaptcha(
             @NonNull CaptchaInfo captchaInfo,
-            @Nullable RemoteCaptchaCallbackListener callbackListener,
+            @NonNull RemoteCaptchaCallbackListener callbackListener,
             @CaptchaDifficulty int difficulty
     );
 
