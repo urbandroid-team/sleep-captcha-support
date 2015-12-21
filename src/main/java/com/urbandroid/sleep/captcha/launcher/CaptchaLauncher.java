@@ -3,27 +3,23 @@ package com.urbandroid.sleep.captcha.launcher;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 
-import com.urbandroid.sleep.captcha.RemoteCaptchaCallbackListener;
 import com.urbandroid.sleep.captcha.annotation.CaptchaDifficulty;
+import com.urbandroid.sleep.captcha.annotation.CaptchaMode;
+import com.urbandroid.sleep.captcha.annotation.SleepOperation;
 import com.urbandroid.sleep.captcha.domain.CaptchaInfo;
+import com.urbandroid.sleep.captcha.intent.SolvedCallbackIntentCreator;
 
 public interface CaptchaLauncher {
 
-    void startCaptcha(
-            @NonNull CaptchaInfo captchaInfo,
-            @NonNull RemoteCaptchaCallbackListener callbackListener
-    );
-
-    void startCaptcha(
-            @NonNull CaptchaInfo captchaInfo,
-            @NonNull RemoteCaptchaCallbackListener callbackListener,
-            @CaptchaDifficulty int difficulty
-    );
+    CaptchaLauncher difficulty(@CaptchaDifficulty int difficulty);
+    CaptchaLauncher operation(@SleepOperation String operation);
+    CaptchaLauncher solvedCallbackIntentCreator(@NonNull SolvedCallbackIntentCreator solvedCallbackIntentCreator);
+    CaptchaLauncher addFlags(int flags);
+    CaptchaLauncher mode(@CaptchaMode int mode);
+    void start(@NonNull CaptchaInfo captchaInfo);
 
     @NonNull
-    Intent prepareCaptchaIntent(
-            @NonNull CaptchaInfo captchaInfo,
-            @CaptchaDifficulty int difficulty,
-            int flags
-    );
+    Intent prepareIntent(@NonNull CaptchaInfo captchaInfo);
+
+
 }

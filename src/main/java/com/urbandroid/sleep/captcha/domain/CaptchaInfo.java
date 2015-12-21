@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 public interface CaptchaInfo extends Parcelable {
 
     int FALLBACK_ID = 1;
+    int DISABLED_ID = 0;
 
     @NonNull
     String getPackageName();

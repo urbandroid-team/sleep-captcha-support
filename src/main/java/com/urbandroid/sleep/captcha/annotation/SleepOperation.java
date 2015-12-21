@@ -17,7 +17,6 @@ import java.lang.annotation.RetentionPolicy;
  * <li>SleepOperation.DISABLE_ALARM</li>
  * <li>SleepOperation.EDIT_ALARM</li>
  * <li>SleepOperation.EDIT_ALARM_TIME_EXTRA</li>
- * <li>SleepOperation.CAPTCHA_START_FOR_RESULT</li>
  * </ul>
  */
 @StringDef({
@@ -27,8 +26,8 @@ import java.lang.annotation.RetentionPolicy;
         SleepOperation.DELETE_ALARM,
         SleepOperation.DISABLE_ALARM,
         SleepOperation.EDIT_ALARM,
-        SleepOperation.EDIT_ALARM_TIME_EXTRA,
-        SleepOperation.CAPTCHA_START_FOR_RESULT
+        SleepOperation.EDIT_ALARM_TIME_EXTRA
+       // SleepOperation.CAPTCHA_START_FOR_RESULT
 })
 @Retention(RetentionPolicy.SOURCE)
 public @interface SleepOperation {
@@ -40,6 +39,6 @@ public @interface SleepOperation {
         String DISABLE_ALARM = "disable_alarm";
         String EDIT_ALARM = "edit_alarm";
         String EDIT_ALARM_TIME_EXTRA = "edit_alarm_time_extra";
-        String CAPTCHA_START_FOR_RESULT = "captcha_start_for_result";
+        //String CAPTCHA_START_FOR_RESULT = "captcha_start_for_result";
 
 }

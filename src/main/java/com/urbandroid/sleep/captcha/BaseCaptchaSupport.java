@@ -9,17 +9,16 @@ import android.util.Log;
 import com.urbandroid.sleep.captcha.annotation.CaptchaDifficulty;
 import com.urbandroid.sleep.captcha.annotation.CaptchaEvent;
 import com.urbandroid.sleep.captcha.annotation.CaptchaMode;
+import com.urbandroid.sleep.captcha.annotation.SleepOperation;
 import com.urbandroid.sleep.captcha.finder.BaseCaptchaFinder;
 import com.urbandroid.sleep.captcha.finder.CaptchaFinder;
 import com.urbandroid.sleep.captcha.intent.IntentExtraSetter;
 import com.urbandroid.sleep.captcha.launcher.BaseCaptchaLauncher;
 import com.urbandroid.sleep.captcha.launcher.CaptchaLauncher;
-import com.urbandroid.sleep.captcha.util.IntentUtil;
 
 import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_ACTION_CONFIG;
 import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_CONFIG_DIFFICULTY;
 import static com.urbandroid.sleep.captcha.CaptchaConstant.PREVIEW;
-import static com.urbandroid.sleep.captcha.CaptchaConstant.SUCCESS;
 
 public class BaseCaptchaSupport implements CaptchaSupport {
 
@@ -69,6 +68,10 @@ public class BaseCaptchaSupport implements CaptchaSupport {
         return intent.getIntExtra(CAPTCHA_CONFIG_DIFFICULTY, CaptchaDifficulty.VERY_SIMPLE);
     }
 
+    protected boolean hasOperation(){
+        return !intent.hasExtra(SleepOperation.OPERATION_NONE);
+    }
+
     @Override
     public void alive() {
         send(CaptchaEvent.CAPTCHA_BACK_INTENT_ALIVE, null);
@@ -86,12 +89,7 @@ public class BaseCaptchaSupport implements CaptchaSupport {
 
     @Override
     public void unsolved() {
-        solved(new IntentExtraSetter() {
-            @Override
-            public void setExtras(@NonNull Intent intent) {
-                intent.putExtra(SUCCESS, false);
-            }
-        });
+        send(CaptchaEvent.CAPTCHA_BACK_INTENT_UNSOLVED, null);
     }
 
     void send(final @CaptchaEvent String event, final @Nullable IntentExtraSetter extraSetter){
@@ -104,17 +102,25 @@ public class BaseCaptchaSupport implements CaptchaSupport {
         if (callbackIntent == null) {
             return;
         }
+        if (extraSetter != null) {
+            extraSetter.setExtras(callbackIntent);
+        }
+
         switch (event) {
             case CaptchaEvent.CAPTCHA_BACK_INTENT_ALIVE:
                 context.startService(callbackIntent);
                 break;
-            case CaptchaEvent.CAPTCHA_BACK_INTENT_SOLVED:
-                callbackIntent.putExtra(SUCCESS, true);
-                if (extraSetter != null) {
-                    extraSetter.setExtras(callbackIntent);
+            case CaptchaEvent.CAPTCHA_BACK_INTENT_UNSOLVED:
+                if (!hasOperation()) {
+                    context.startActivity(callbackIntent);
                 }
-                Log.i(TAG, IntentUtil.traceIntent(callbackIntent));
-                context.sendBroadcast(callbackIntent);
+                break;
+            case CaptchaEvent.CAPTCHA_BACK_INTENT_SOLVED:
+                if (hasOperation()) {
+                    context.sendBroadcast(callbackIntent);
+                } else {
+                    context.startActivity(callbackIntent);
+                }
                 break;
         }
     }

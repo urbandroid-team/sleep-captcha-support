@@ -37,7 +37,10 @@ public class FallbackCaptchaFinder implements CaptchaFinder{
 
     @Override
     @Nullable
-    public CaptchaInfo findById(int id) {
+    public CaptchaInfo findById(final int id) {
+        if (id == CaptchaInfo.DISABLED_ID) {
+            return null;
+        }
         final CaptchaInfo captchaInfo = captchaFinder.findById(id);
         return captchaInfo == null ? fallbackInternalCaptcha: captchaInfo;
     }
