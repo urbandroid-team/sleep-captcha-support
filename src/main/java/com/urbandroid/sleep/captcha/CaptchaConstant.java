@@ -10,7 +10,8 @@ public interface CaptchaConstant {
     String CAPTCHA_ACTION_LAUNCH = "com.urbandroid.sleep.captcha.intent.action.OPEN";
     String CAPTCHA_ACTION_CONFIG = "com.urbandroid.sleep.captcha.intent.action.CONFIG";
     String CAPTCHA_ACTION_SOLVED = "com.urbandroid.sleep.captcha.intent.action.SOLVED";
-    String CAPTCHA_ACTION_ALIVE = "com.urbandroid.sleep.captcha.intent.action.ALIVE";
+
+    String CAPTCHA_ACTION_ALIVE = "com.urbandroid.sleep.ACTION_DELAY_RESUMER";
 
     String SUCCESS = "success";
     String PREVIEW = "preview";

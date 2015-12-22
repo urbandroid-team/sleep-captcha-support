@@ -108,7 +108,7 @@ public class BaseCaptchaSupport implements CaptchaSupport {
 
         switch (event) {
             case CaptchaEvent.CAPTCHA_BACK_INTENT_ALIVE:
-                context.startService(callbackIntent);
+                context.sendBroadcast(callbackIntent);
                 break;
             case CaptchaEvent.CAPTCHA_BACK_INTENT_UNSOLVED:
                 if (!hasOperation()) {
