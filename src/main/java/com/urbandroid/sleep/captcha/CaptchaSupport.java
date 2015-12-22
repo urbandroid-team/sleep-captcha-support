@@ -10,7 +10,15 @@ import com.urbandroid.sleep.captcha.launcher.CaptchaLauncher;
 
 public interface CaptchaSupport {
 
+
     String TAG = "captcha-support";
+
+    int DEFAULT_ALIVE_TIMEOUT_IN_SECONDS = 60;
+    int MAX_ALIVE_TIMEOUT_IN_SECONDS = 5 * 60;
+    int MIN_ALIVE_TIMEOUT_IN_SECONDS = 5;
+
+    CaptchaSupport aliveTimeout(int timeoutInSeconds);
+    int getRemainingTime();
 
     boolean isPreviewMode();
 

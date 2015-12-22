@@ -7,13 +7,13 @@ import com.urbandroid.sleep.captcha.annotation.CaptchaDifficulty;
 import com.urbandroid.sleep.captcha.annotation.CaptchaMode;
 import com.urbandroid.sleep.captcha.annotation.SleepOperation;
 import com.urbandroid.sleep.captcha.domain.CaptchaInfo;
-import com.urbandroid.sleep.captcha.intent.SolvedCallbackIntentCreator;
+import com.urbandroid.sleep.captcha.intent.CallbackIntentCreator;
 
 public interface CaptchaLauncher {
 
     CaptchaLauncher difficulty(@CaptchaDifficulty int difficulty);
     CaptchaLauncher operation(@SleepOperation String operation);
-    CaptchaLauncher solvedCallbackIntentCreator(@NonNull SolvedCallbackIntentCreator solvedCallbackIntentCreator);
+    CaptchaLauncher callbackIntentCreator(@NonNull CallbackIntentCreator callbackIntentCreator);
     CaptchaLauncher addFlags(int flags);
     CaptchaLauncher mode(@CaptchaMode int mode);
     void start(@NonNull CaptchaInfo captchaInfo);

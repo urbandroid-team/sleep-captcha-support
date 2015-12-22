@@ -2,14 +2,13 @@ package com.urbandroid.sleep.captcha;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import static com.urbandroid.sleep.captcha.CaptchaSupport.TAG;
 
 public class CaptchaSupportFactory {
 
-    @Nullable
+    @NonNull
     public static CaptchaSupport create(final @NonNull Activity activity) {
         if (!CaptchaConstant.CAPTCHA_ACTION_LAUNCH.equals(activity.getIntent().getAction())) {
             Log.w(TAG, "Creating FAKE PREVIEW captcha support since it is activity with no captcha launch action (" + CaptchaConstant.CAPTCHA_ACTION_LAUNCH + ")");
@@ -19,6 +18,7 @@ public class CaptchaSupportFactory {
         }
         final BaseCaptchaSupport baseCaptchaSupport = new BaseCaptchaSupport(
                 activity.getApplicationContext(), activity.getIntent());
+        baseCaptchaSupport.alive();
 
         CaptchaSupportHolder.set(baseCaptchaSupport);
         Log.w(TAG, "Captcha support created");

@@ -10,28 +10,19 @@ import com.urbandroid.sleep.captcha.annotation.CaptchaDifficulty;
 import com.urbandroid.sleep.captcha.annotation.CaptchaEvent;
 import com.urbandroid.sleep.captcha.annotation.CaptchaMode;
 import com.urbandroid.sleep.captcha.annotation.SleepOperation;
-import com.urbandroid.sleep.captcha.finder.BaseCaptchaFinder;
-import com.urbandroid.sleep.captcha.finder.CaptchaFinder;
 import com.urbandroid.sleep.captcha.intent.IntentExtraSetter;
-import com.urbandroid.sleep.captcha.launcher.BaseCaptchaLauncher;
-import com.urbandroid.sleep.captcha.launcher.CaptchaLauncher;
 
 import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_ACTION_CONFIG;
 import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_CONFIG_DIFFICULTY;
 import static com.urbandroid.sleep.captcha.CaptchaConstant.PREVIEW;
 
-public class BaseCaptchaSupport implements CaptchaSupport {
+public class BaseCaptchaSupport extends AbstractCaptchaSupport {
 
-    private final Context context;
     private final Intent intent;
-    private final CaptchaFinder finder;
-    private final CaptchaLauncher launcher;
 
     protected BaseCaptchaSupport(final @NonNull Context context, final @NonNull Intent intent) {
-        this.context = context;
+        super(context);
         this.intent = intent;
-        this.finder = new BaseCaptchaFinder(context);
-        this.launcher = new BaseCaptchaLauncher(context);
     }
 
     @Override
@@ -73,7 +64,7 @@ public class BaseCaptchaSupport implements CaptchaSupport {
     }
 
     @Override
-    public void alive() {
+    protected void doAlive() {
         send(CaptchaEvent.CAPTCHA_BACK_INTENT_ALIVE, null);
     }
 
@@ -124,15 +115,5 @@ public class BaseCaptchaSupport implements CaptchaSupport {
                 break;
         }
     }
-
-    @Override
-    public CaptchaFinder getFinder() {
-        return finder;
-    }
-    @Override
-    public CaptchaLauncher getLauncher() {
-        return launcher;
-    }
-
 
 }

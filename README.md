@@ -41,10 +41,8 @@ Sleep as Android will not find your captcha.
             >
             <meta-data android:name="com.urbandroid.sleep.captcha.meta.has_difficulty" android:value="true"/>
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
                 <action android:name="com.urbandroid.sleep.captcha.intent.action.OPEN"/>
                 <action android:name="com.urbandroid.sleep.captcha.intent.action.CONFIG"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
     </application>
