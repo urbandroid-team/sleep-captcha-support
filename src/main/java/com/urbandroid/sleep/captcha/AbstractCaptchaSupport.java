@@ -39,7 +39,7 @@ public abstract class AbstractCaptchaSupport implements CaptchaSupport {
             return this;
         }
         this.aliveTimeoutInSeconds = timeoutInSeconds;
-        return null;
+        return this;
     }
 
     @Override
