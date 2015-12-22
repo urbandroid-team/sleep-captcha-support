@@ -29,14 +29,13 @@ Your captcha activity must be exported and single top. OPEN action is mandatory 
 Sleep as Android will not find your captcha.
 
 ```xml
-<manifest>
+<manifest ... >
 
-    <application
-        android:launchMode="singleTop"
-    >
+    <application ... >
 
         <activity
             android:name=".MyCleverCaptchaActivity"
+            android:launchMode="singleTop"
             android:label="@string/captcha_label"
             android:exported="true"
             >
