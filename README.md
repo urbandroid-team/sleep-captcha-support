@@ -20,7 +20,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.urbandroid.sleep:captcha-support:0.0.9@aar'
+    compile 'com.urbandroid.sleep:captcha-support:0.1.0@aar'
 }
 ```
 ## Captcha Manifest
@@ -29,7 +29,7 @@ Your captcha activity must be exported and single top. OPEN action is mandatory 
 Sleep as Android will not find your captcha.
 
 ```xml
-<manifest
+<manifest>
 
     <application
         android:launchMode="singleTop"
