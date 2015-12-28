@@ -1,8 +1,10 @@
 package com.urbandroid.sleep.captcha;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.urbandroid.sleep.captcha.finder.BaseCaptchaFinder;
@@ -21,10 +23,25 @@ public abstract class AbstractCaptchaSupport implements CaptchaSupport {
     private int aliveTimeoutInSeconds = DEFAULT_ALIVE_TIMEOUT_IN_SECONDS;
     private long lastAliveSent = -1;
 
+    private RemainingTimeListener remainingTimeListener;
+    private final Handler handler = new Handler();
+
+    private final RemainingTimeRunnable remainingTimeRunnable = new RemainingTimeRunnable();
+
     protected AbstractCaptchaSupport(final @NonNull Context context) {
         this.context = context;
         this.finder = new BaseCaptchaFinder(context);
         this.launcher = new BaseCaptchaLauncher(context);
+    }
+
+    @Override
+    public CaptchaSupport setRemainingTimeListener(final @Nullable RemainingTimeListener remainingTimeListener) {
+        this.remainingTimeListener = remainingTimeListener;
+        handler.removeCallbacks(remainingTimeRunnable);
+        if (remainingTimeListener != null) {
+            handler.postDelayed(remainingTimeRunnable, 500);
+        }
+        return this;
     }
 
     @Override
@@ -71,6 +88,17 @@ public abstract class AbstractCaptchaSupport implements CaptchaSupport {
     @Override
     public CaptchaLauncher getLauncher() {
         return launcher;
+    }
+
+    private class RemainingTimeRunnable implements Runnable {
+        @Override
+        public void run() {
+            if (remainingTimeListener == null) {
+                return;
+            }
+            remainingTimeListener.timeRemain(getRemainingTime(), aliveTimeoutInSeconds);
+            handler.postDelayed(this, 500);
+        }
     }
 
 

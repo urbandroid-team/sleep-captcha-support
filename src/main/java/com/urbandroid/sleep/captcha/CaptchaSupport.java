@@ -17,6 +17,8 @@ public interface CaptchaSupport {
     int MAX_ALIVE_TIMEOUT_IN_SECONDS = 5 * 60;
     int MIN_ALIVE_TIMEOUT_IN_SECONDS = 5;
 
+    CaptchaSupport setRemainingTimeListener(@Nullable RemainingTimeListener remainingTimeListener);
+
     CaptchaSupport aliveTimeout(int timeoutInSeconds);
     int getRemainingTime();
 
