@@ -53,35 +53,4 @@ dependencies {
 apply from: './release-aar.gradle'
 
 
-Properties props = new Properties()
-props.load(project.rootProject.file('local.properties').newDataInputStream())
-def bintrayUser = props.getProperty('bintray.user')
-def bintrayKey = props.getProperty('bintray.key')
-def bintrayVersionName = ext.PUBLISH_VERSION
-def bintrayVcsTag = ext.PUBLISH_VERSION
-
-/*
-bintray {
-    user = bintrayUser
-    key =  bintrayKey
-    pkg {
-        repo = 'maven'
-        name = 'com.urbandroid.sleep'
-
-        version {
-            name = bintrayVersionName
-            desc = 'Sleep as Android: Captcha Support library'
-            released  = new Date()
-            vcsTag = bintrayVcsTag
-        }
-
-        licenses = ['Apache-2.0']
-        vcsUrl = 'https://github.com/urbandroid-team/sleep-captcha-support.git'
-        websiteUrl = 'https://github.com/urbandroid-team/sleep-captcha-support'
-    }
-    configurations = ['archives']
-}
-*/
-
-
  

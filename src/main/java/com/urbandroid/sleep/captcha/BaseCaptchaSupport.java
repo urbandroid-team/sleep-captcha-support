@@ -65,7 +65,7 @@ public class BaseCaptchaSupport extends AbstractCaptchaSupport {
     protected void doAlive() {
         send(CaptchaEvent.CAPTCHA_BACK_INTENT_ALIVE, new IntentExtraSetter() {
             @Override
-            public void setExtras(@NonNull Intent intent) {
+            public void setExtras(final @NonNull Intent intent) {
                 intent.putExtra(CaptchaConstant.TIME_ADD, aliveTimeoutInSeconds);
             }
         });

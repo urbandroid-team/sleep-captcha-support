@@ -20,7 +20,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.urbandroid.sleep:captcha-support:0.1.0@aar'
+    compile 'com.urbandroid.sleep:captcha-support:0.1.2@aar'
 }
 ```
 ## Captcha Manifest
@@ -49,25 +49,39 @@ Sleep as Android will not find your captcha.
 
 </manifest>
 ```
+## CaptchaSupport object
 
-## Captcha Mode
+All interaction between Sleep and Captcha is covered by CaptchaSupport object. It must
+be created inside onCreate method of Activity.
 
-* Preview
-* Configuration
-* Operational
+```java
+    protected void onCreate(final Bundle savedInstanceState) {
+        ...
+        captchaSupport = CaptchaSupportFactory.create(this);
+        ...
+    }
+```
 
-## Captcha Difficulty
+When CaptchaSupport object is created you can
+* check in which mode (Preview, Configuration, Operational) is catcha running by CaptchaSupport.getMode()
+or CaptchaSupport.isPreviewMode(), isOperationalMode(), isConfigurationMode()
+* get difficulty (1-5) - use CaptchaSupport.getDifficulty()
+* set up time remaining listener
+* call solved method when captcha is successfully resolved
+* call unsolved method when captcha was not solved but user left activity
+* call alive in order to reset timeout for solving captcha
+* or use advanced features like CaptchaFinder for getting list of all available captchs on mobile
+and launch them via CaptchaLauncher
 
-* Very Simple
-* Simple
-* CaptchaDifficulty.INTERMEDIATE
-* CaptchaDifficulty.HARD
-* CaptchaDifficulty.VERY_HARD
-
+## Recommendation
+* CapchaSupport object must be created in activity onCreate method
+* override activity onUserInteraction method to call CaptchaSupport.alive() method
+* override activity onBackPressed method to call CaptchaSupport.unsolved()
 
 ## Read more and get started
 
-Read more on the [website][website].
+Check simple github project captcha [examples] or read more on the [website][website].
 
+[examples]: https://github.com/urbandroid-team/sleep-captcha-example/
 [issues]: https://github.com/urbandroid-team/sleep-captcha-support/issues
 [website]: http://sleep.urbandroid.org/documentation/developer-api/captcha-api
