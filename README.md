@@ -82,6 +82,6 @@ and launch them via CaptchaLauncher
 
 Check simple github project captcha [examples] or read more on the [website][website].
 
-[examples]: https://github.com/urbandroid-team/sleep-captcha-example/
+[examples]: https://github.com/urbandroid-team/sleep-captcha-examples/
 [issues]: https://github.com/urbandroid-team/sleep-captcha-support/issues
 [website]: http://sleep.urbandroid.org/documentation/developer-api/captcha-api
