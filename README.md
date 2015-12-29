@@ -73,6 +73,19 @@ or CaptchaSupport.isPreviewMode(), isOperationalMode(), isConfigurationMode()
 * or use advanced features like CaptchaFinder for getting list of all available captchs on mobile
 and launch them via CaptchaLauncher
 
+## Difficulty
+Put following lines in AndroidManifest file, in case your catcha need support several level of difficulty
+```xml
+    <activity ...>
+        ...
+        <meta-data android:name="com.urbandroid.sleep.captcha.meta.has_difficulty" android:value="true"/>
+        ...
+    </activity>
+```
+To get current captcha difficulty call CaptchaSuport.getDifficulty().
+Use CaptchaDifficulty annotation to get all possible values.
+
+
 ## Recommendation
 * CapchaSupport object must be created in activity onCreate method
 * override activity onUserInteraction method to call CaptchaSupport.alive() method
