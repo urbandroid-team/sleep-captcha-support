@@ -3,6 +3,7 @@ package com.urbandroid.sleep.captcha.launcher;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.urbandroid.sleep.captcha.CaptchaConstant;
@@ -18,11 +19,14 @@ import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_ACTION_LAUNCH
 import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_ACTION_SOLVED;
 import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_BACK_INFO;
 import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_CONFIG_DIFFICULTY;
+import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_ORIGIN_INTENT;
+import static com.urbandroid.sleep.captcha.CaptchaConstant.SUCCESS;
 import static com.urbandroid.sleep.captcha.CaptchaConstant.TAG;
 
 public class BaseCaptchaLauncher implements CaptchaLauncher {
 
     protected final Context context;
+    protected final Intent originIntent;
 
     protected @CaptchaDifficulty int difficulty = CaptchaDifficulty.VERY_SIMPLE;
     protected @CaptchaMode int mode = CaptchaMode.CAPTCHA_MODE_OPERATIONAL;
@@ -31,7 +35,12 @@ public class BaseCaptchaLauncher implements CaptchaLauncher {
     protected int flags = Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP;
 
     public BaseCaptchaLauncher(final @NonNull Context context) {
+        this(context, null);
+    }
+
+    public BaseCaptchaLauncher(final @NonNull Context context, final @Nullable Intent originIntent) {
         this.context = context;
+        this.originIntent = originIntent;
     }
 
     @Override
@@ -92,7 +101,9 @@ public class BaseCaptchaLauncher implements CaptchaLauncher {
                 final Intent solvedCaptchaIntent =
                         callbackIntentCreator == null ?
                                 new Intent(CAPTCHA_ACTION_SOLVED)
+                                        .putExtra(CAPTCHA_ORIGIN_INTENT, originIntent)
                                         .putExtra(CAPTCHA_BACK_INFO, captchaInfo)
+                                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                         .setPackage(context.getPackageName())
                                 :
                                 callbackIntentCreator.createSolvedIntent(context);
@@ -100,7 +111,10 @@ public class BaseCaptchaLauncher implements CaptchaLauncher {
                 final Intent unsolvedCaptchaIntent =
                         callbackIntentCreator == null ?
                                 new Intent(CAPTCHA_ACTION_SOLVED)
+                                        .putExtra(CAPTCHA_ORIGIN_INTENT, originIntent)
                                         .putExtra(CAPTCHA_BACK_INFO, captchaInfo)
+                                        .putExtra(SUCCESS, false)
+                                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                         .setPackage(context.getPackageName())
                                 :
                                 callbackIntentCreator.createUnsolvedIntent(context);

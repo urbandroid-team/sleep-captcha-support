@@ -1,6 +1,7 @@
 package com.urbandroid.sleep.captcha;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
@@ -17,10 +18,12 @@ import java.util.concurrent.TimeUnit;
 public abstract class AbstractCaptchaSupport implements CaptchaSupport {
 
     protected final Context context;
+    protected final Intent intent;
+
     protected final CaptchaFinder finder;
     protected final CaptchaLauncher launcher;
 
-    private int aliveTimeoutInSeconds = DEFAULT_ALIVE_TIMEOUT_IN_SECONDS;
+    protected int aliveTimeoutInSeconds = DEFAULT_ALIVE_TIMEOUT_IN_SECONDS;
     private long lastAliveSent = -1;
 
     private RemainingTimeListener remainingTimeListener;
@@ -28,10 +31,11 @@ public abstract class AbstractCaptchaSupport implements CaptchaSupport {
 
     private final RemainingTimeRunnable remainingTimeRunnable = new RemainingTimeRunnable();
 
-    protected AbstractCaptchaSupport(final @NonNull Context context) {
+    protected AbstractCaptchaSupport(final @NonNull Context context, final @Nullable Intent intent) {
         this.context = context;
+        this.intent = intent;
         this.finder = new BaseCaptchaFinder(context);
-        this.launcher = new BaseCaptchaLauncher(context);
+        this.launcher = new BaseCaptchaLauncher(context, intent);
     }
 
     @Override

@@ -18,11 +18,9 @@ import static com.urbandroid.sleep.captcha.CaptchaConstant.PREVIEW;
 
 public class BaseCaptchaSupport extends AbstractCaptchaSupport {
 
-    private final Intent intent;
 
     protected BaseCaptchaSupport(final @NonNull Context context, final @NonNull Intent intent) {
-        super(context);
-        this.intent = intent;
+        super(context, intent);
     }
 
     @Override
@@ -65,7 +63,12 @@ public class BaseCaptchaSupport extends AbstractCaptchaSupport {
 
     @Override
     protected void doAlive() {
-        send(CaptchaEvent.CAPTCHA_BACK_INTENT_ALIVE, null);
+        send(CaptchaEvent.CAPTCHA_BACK_INTENT_ALIVE, new IntentExtraSetter() {
+            @Override
+            public void setExtras(@NonNull Intent intent) {
+                intent.putExtra(CaptchaConstant.TIME_ADD, aliveTimeoutInSeconds);
+            }
+        });
     }
 
     @Override

@@ -10,7 +10,7 @@ import java.lang.annotation.RetentionPolicy;
  *
  * <p><strong>Possible values:</strong>
  * <ul>
- * <li>CaptchaMode.CAPTCHA_MODE_OPERATIONAL,</li>
+ * <li>CaptchaMode.CAPTCHA_MODE_OPERATIONAL</li>
  * <li>CaptchaMode.CAPTCHA_MODE_PREVIEW</li>
  * <li>CaptchaMode.CAPTCHA_MODE_CONFIGURATION</li>
  * </ul>

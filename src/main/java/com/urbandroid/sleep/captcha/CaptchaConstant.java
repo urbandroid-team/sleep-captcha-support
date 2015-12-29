@@ -6,6 +6,7 @@ public interface CaptchaConstant {
     String SLEEP_PACKAGE = "com.urbandroid.sleep";
 
     String CAPTCHA_BACK_INFO  = "captchaInfo";
+    String CAPTCHA_ORIGIN_INTENT  = "originIntent";
 
     String CAPTCHA_ACTION_LAUNCH = "com.urbandroid.sleep.captcha.intent.action.OPEN";
     String CAPTCHA_ACTION_CONFIG = "com.urbandroid.sleep.captcha.intent.action.CONFIG";
@@ -14,6 +15,7 @@ public interface CaptchaConstant {
 
     String SUCCESS = "success";
     String PREVIEW = "preview";
+    String TIME_ADD = "timeAddInSeconds";
     String CAPTCHA_CONFIG_SUSPEND_VOLUME_MODE = "suspend-volume-mode";
     String CAPTCHA_CONFIG_DIFFICULTY = "difficulty";
 

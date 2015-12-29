@@ -10,7 +10,7 @@ import com.urbandroid.sleep.captcha.intent.IntentExtraSetter;
 public class FallbackPreviewCaptchaSupport extends AbstractCaptchaSupport {
 
     public FallbackPreviewCaptchaSupport(final Context context) {
-        super(context);
+        super(context, null);
     }
 
     @Override
