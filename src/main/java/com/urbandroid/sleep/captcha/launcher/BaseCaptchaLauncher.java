@@ -14,6 +14,7 @@ import com.urbandroid.sleep.captcha.annotation.CaptchaMode;
 import com.urbandroid.sleep.captcha.annotation.SleepOperation;
 import com.urbandroid.sleep.captcha.domain.CaptchaInfo;
 import com.urbandroid.sleep.captcha.intent.CallbackIntentCreator;
+import com.urbandroid.sleep.captcha.util.IntentUtil;
 
 import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_ACTION_LAUNCH;
 import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_ACTION_SOLVED;
@@ -75,8 +76,14 @@ public class BaseCaptchaLauncher implements CaptchaLauncher {
 
     @Override
     public void start(final @NonNull CaptchaInfo captchaInfo) {
-        Log.i(TAG, "Starting captcha mode: "  + mode + " difficulty: " + difficulty + " " + captchaInfo);
-        context.startActivity(prepareIntent(captchaInfo));
+        Log.i(TAG, "Starting captcha mode: " + mode + " difficulty: " + difficulty + " operation: " + operation + " " + captchaInfo);
+
+        final Intent intent = prepareIntent(captchaInfo);
+        final StringBuilder sb = new StringBuilder();
+        IntentUtil.traceIntent(sb, intent);
+        Log.d(TAG, sb.toString());
+
+        context.startActivity(intent);
     }
 
     @NonNull
