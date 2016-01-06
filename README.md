@@ -63,7 +63,7 @@ be created inside onCreate method of Activity.
 ```
 
 When CaptchaSupport object is created you can
-* check in which mode (Preview, Configuration, Operational) is catcha running by CaptchaSupport.getMode()
+* check in which mode (Preview, Configuration, Operational) is captcha running by CaptchaSupport.getMode()
 or CaptchaSupport.isPreviewMode(), isOperationalMode(), isConfigurationMode()
 * get difficulty (1-5) - use CaptchaSupport.getDifficulty()
 * set up time remaining listener
@@ -74,7 +74,7 @@ or CaptchaSupport.isPreviewMode(), isOperationalMode(), isConfigurationMode()
 and launch them via CaptchaLauncher
 
 ## Difficulty
-Put following lines in AndroidManifest file, in case your catcha need support several level of difficulty
+Put following lines in AndroidManifest file, in case your captcha need support several level of difficulty
 ```xml
     <activity ...>
         ...
@@ -82,12 +82,12 @@ Put following lines in AndroidManifest file, in case your catcha need support se
         ...
     </activity>
 ```
-To get current captcha difficulty call CaptchaSuport.getDifficulty().
+To get current captcha difficulty call CaptchaSupport.getDifficulty().
 Use CaptchaDifficulty annotation to get all possible values.
 
 
 ## Recommendation
-* CapchaSupport object must be created in activity onCreate method
+* CaptchaSupport object must be created in activity onCreate method
 * override activity onUserInteraction method to call CaptchaSupport.alive() method
 * override activity onBackPressed method to call CaptchaSupport.unsolved()
 
