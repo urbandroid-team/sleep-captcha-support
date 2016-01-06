@@ -125,7 +125,6 @@ public class BaseCaptchaLauncher implements CaptchaLauncher {
                                         .setPackage(context.getPackageName())
                                 :
                                 callbackIntentCreator.createUnsolvedIntent(context, operation);
-                unsolvedCaptchaIntent.putExtra(operation, true);
                 unsolvedCaptchaIntent.putExtra(CAPTCHA_BACK_INFO, captchaInfo);
 
                 final Intent captchaAliveIntent = new Intent(CaptchaConstant.CAPTCHA_ACTION_ALIVE);
