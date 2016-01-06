@@ -109,24 +109,24 @@ public class BaseCaptchaLauncher implements CaptchaLauncher {
                         callbackIntentCreator == null ?
                                 new Intent(CAPTCHA_ACTION_SOLVED)
                                         .putExtra(CAPTCHA_ORIGIN_INTENT, originIntent)
-                                        .putExtra(CAPTCHA_BACK_INFO, captchaInfo)
-                                        .putExtra(operation, true)
                                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                         .setPackage(context.getPackageName())
                                 :
                                 callbackIntentCreator.createSolvedIntent(context);
+                solvedCaptchaIntent.putExtra(operation, true);
+                solvedCaptchaIntent.putExtra(CAPTCHA_BACK_INFO, captchaInfo);
 
                 final Intent unsolvedCaptchaIntent =
                         callbackIntentCreator == null ?
                                 new Intent(CAPTCHA_ACTION_SOLVED)
                                         .putExtra(CAPTCHA_ORIGIN_INTENT, originIntent)
-                                        .putExtra(CAPTCHA_BACK_INFO, captchaInfo)
-                                        .putExtra(operation, true)
                                         .putExtra(SUCCESS, false)
                                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                         .setPackage(context.getPackageName())
                                 :
                                 callbackIntentCreator.createUnsolvedIntent(context);
+                unsolvedCaptchaIntent.putExtra(operation, true);
+                unsolvedCaptchaIntent.putExtra(CAPTCHA_BACK_INFO, captchaInfo);
 
                 final Intent captchaAliveIntent = new Intent(CaptchaConstant.CAPTCHA_ACTION_ALIVE);
 
