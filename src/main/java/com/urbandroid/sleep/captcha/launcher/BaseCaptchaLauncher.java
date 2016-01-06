@@ -112,7 +112,7 @@ public class BaseCaptchaLauncher implements CaptchaLauncher {
                                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                         .setPackage(context.getPackageName())
                                 :
-                                callbackIntentCreator.createSolvedIntent(context);
+                                callbackIntentCreator.createSolvedIntent(context, operation);
                 solvedCaptchaIntent.putExtra(operation, true);
                 solvedCaptchaIntent.putExtra(CAPTCHA_BACK_INFO, captchaInfo);
 
@@ -124,7 +124,7 @@ public class BaseCaptchaLauncher implements CaptchaLauncher {
                                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                         .setPackage(context.getPackageName())
                                 :
-                                callbackIntentCreator.createUnsolvedIntent(context);
+                                callbackIntentCreator.createUnsolvedIntent(context, operation);
                 unsolvedCaptchaIntent.putExtra(operation, true);
                 unsolvedCaptchaIntent.putExtra(CAPTCHA_BACK_INFO, captchaInfo);
 

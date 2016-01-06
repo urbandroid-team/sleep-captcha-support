@@ -92,7 +92,7 @@ public class BaseCaptchaSupport extends AbstractCaptchaSupport {
         }
 
         final Intent callbackIntent = intent.getParcelableExtra(event);
-        Log.i(TAG, "calling " + event + ": " + callbackIntent);
+        Log.i(TAG, " calling " + event + ": " + callbackIntent);
         if (callbackIntent == null) {
             return;
         }
