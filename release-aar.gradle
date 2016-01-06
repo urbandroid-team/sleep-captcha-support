@@ -29,8 +29,8 @@ uploadArchives {
           pom.groupId = groupId
           pom.artifactId = artifactId
           pom.version = version
-          //repository(url: 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath)
-          repository(url: "file://${localReleaseDest}")
+          repository(url: 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath)
+          //repository(url: "file://${localReleaseDest}")
         }
     }
 }
