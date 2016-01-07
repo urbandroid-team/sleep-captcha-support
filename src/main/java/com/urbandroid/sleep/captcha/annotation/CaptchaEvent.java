@@ -23,8 +23,8 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.SOURCE)
 public @interface CaptchaEvent {
 
-        String CAPTCHA_BACK_INTENT_SOLVED = "solved";
-        String CAPTCHA_BACK_INTENT_UNSOLVED = "unsolved";
-        String CAPTCHA_BACK_INTENT_ALIVE  = "alive";
+        @CaptchaEvent String CAPTCHA_BACK_INTENT_SOLVED = "solved";
+        @CaptchaEvent String CAPTCHA_BACK_INTENT_UNSOLVED = "unsolved";
+        @CaptchaEvent String CAPTCHA_BACK_INTENT_ALIVE  = "alive";
 
 }

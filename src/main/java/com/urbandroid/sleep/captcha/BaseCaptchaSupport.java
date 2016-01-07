@@ -1,6 +1,6 @@
 package com.urbandroid.sleep.captcha;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,17 +10,18 @@ import com.urbandroid.sleep.captcha.annotation.CaptchaDifficulty;
 import com.urbandroid.sleep.captcha.annotation.CaptchaEvent;
 import com.urbandroid.sleep.captcha.annotation.CaptchaMode;
 import com.urbandroid.sleep.captcha.annotation.SleepOperation;
+import com.urbandroid.sleep.captcha.annotation.SuppressAlarmMode;
 import com.urbandroid.sleep.captcha.intent.IntentExtraSetter;
 
 import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_ACTION_CONFIG;
 import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_CONFIG_DIFFICULTY;
+import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_CONFIG_SUPPRESS_ALARM_MODE;
 import static com.urbandroid.sleep.captcha.CaptchaConstant.PREVIEW;
 
 public class BaseCaptchaSupport extends AbstractCaptchaSupport {
 
-
-    protected BaseCaptchaSupport(final @NonNull Context context, final @NonNull Intent intent) {
-        super(context, intent);
+    protected BaseCaptchaSupport(final @NonNull Activity activity, final @NonNull Intent intent) {
+        super(activity, intent);
     }
 
     @Override
@@ -57,6 +58,13 @@ public class BaseCaptchaSupport extends AbstractCaptchaSupport {
         return intent.getIntExtra(CAPTCHA_CONFIG_DIFFICULTY, CaptchaDifficulty.VERY_SIMPLE);
     }
 
+    @Override
+    @SuppressWarnings("ResourceType")
+    @SuppressAlarmMode
+    public int getSuppressAlarmMode() {
+        return intent.getIntExtra(CAPTCHA_CONFIG_SUPPRESS_ALARM_MODE, SuppressAlarmMode.FULL_ALARM_VOLUME);
+    }
+
     protected boolean hasOperation(){
         return !intent.hasExtra(SleepOperation.OPERATION_NONE);
     }
@@ -91,7 +99,7 @@ public class BaseCaptchaSupport extends AbstractCaptchaSupport {
             return;
         }
 
-        final Intent callbackIntent = intent.getParcelableExtra(event);
+        final Intent callbackIntent = intent != null ? (Intent) intent.getParcelableExtra(event) : null;
         Log.i(TAG, " calling " + event + ": " + callbackIntent);
         if (callbackIntent == null) {
             return;

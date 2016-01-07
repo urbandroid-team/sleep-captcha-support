@@ -27,10 +27,10 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.SOURCE)
 public @interface CaptchaDifficulty {
 
-        int VERY_SIMPLE = 1;
-        int SIMPLE = 2;
-        int INTERMEDIATE = 3;
-        int HARD = 4;
-        int VERY_HARD = 5;
+        @CaptchaDifficulty int VERY_SIMPLE = 1;
+        @CaptchaDifficulty int SIMPLE = 2;
+        @CaptchaDifficulty int INTERMEDIATE = 3;
+        @CaptchaDifficulty int HARD = 4;
+        @CaptchaDifficulty int VERY_HARD = 5;
 
 }

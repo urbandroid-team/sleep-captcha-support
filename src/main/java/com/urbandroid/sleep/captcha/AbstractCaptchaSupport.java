@@ -1,13 +1,17 @@
 package com.urbandroid.sleep.captcha;
 
+import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Handler;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.urbandroid.sleep.captcha.annotation.SuppressAlarmMode;
 import com.urbandroid.sleep.captcha.finder.BaseCaptchaFinder;
 import com.urbandroid.sleep.captcha.finder.CaptchaFinder;
 import com.urbandroid.sleep.captcha.launcher.BaseCaptchaLauncher;
@@ -17,11 +21,12 @@ import java.util.concurrent.TimeUnit;
 
 public abstract class AbstractCaptchaSupport implements CaptchaSupport {
 
-    protected final Context context;
-    protected final Intent intent;
+    protected final @NonNull Activity activity;
+    protected final @NonNull Context context;
+    protected final @Nullable Intent intent;
 
-    protected final CaptchaFinder finder;
-    protected final CaptchaLauncher launcher;
+    protected final @NonNull CaptchaFinder finder;
+    protected final @NonNull CaptchaLauncher launcher;
 
     protected int aliveTimeoutInSeconds = DEFAULT_ALIVE_TIMEOUT_IN_SECONDS;
     private long lastAliveSent = -1;
@@ -31,15 +36,25 @@ public abstract class AbstractCaptchaSupport implements CaptchaSupport {
 
     private final RemainingTimeRunnable remainingTimeRunnable = new RemainingTimeRunnable();
 
-    protected AbstractCaptchaSupport(final @NonNull Context context, final @Nullable Intent intent) {
-        this.context = context;
+    protected AbstractCaptchaSupport(final @NonNull Activity activity, final @Nullable Intent intent) {
+        this.activity = activity;
+        this.context = activity.getApplicationContext();
         this.intent = intent;
         this.finder = new BaseCaptchaFinder(context);
         this.launcher = new BaseCaptchaLauncher(context, intent);
+
+        final IntentFilter filter = new IntentFilter();
+        filter.addAction(CaptchaConstant.ALARM_SNOOZE_ACTION);
+        filter.addAction(CaptchaConstant.ACTION_FINISH_CAPTCHA);
+        context.registerReceiver(finishReceiver, filter);
     }
 
     @Override
     public CaptchaSupport setRemainingTimeListener(final @Nullable RemainingTimeListener remainingTimeListener) {
+        if (getSuppressAlarmMode() == SuppressAlarmMode.FULL_ALARM_VOLUME) {
+            Log.w(TAG, "SuppressAlarmMode: Full Alarm Volume - RemainingTimeListener will be not active");
+            return this;
+        }
         this.remainingTimeListener = remainingTimeListener;
         handler.removeCallbacks(remainingTimeRunnable);
         if (remainingTimeListener != null) {
@@ -105,5 +120,19 @@ public abstract class AbstractCaptchaSupport implements CaptchaSupport {
         }
     }
 
+    @Override
+    public void destroy() {
+        context.unregisterReceiver(finishReceiver);
+        if (remainingTimeRunnable != null) {
+            handler.removeCallbacks(remainingTimeRunnable);
+        }
+    }
+
+    private BroadcastReceiver finishReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            activity.finish();
+        }
+    };
 
 }

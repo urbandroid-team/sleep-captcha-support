@@ -32,13 +32,13 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.SOURCE)
 public @interface SleepOperation {
 
-        String OPERATION_NONE = "no_operation";
-        String SNOOZE_CANCELED = "snooze_cancel";
-        String SHOULD_SKIP = "should_skip";
-        String DELETE_ALARM = "delete_alarm";
-        String DISABLE_ALARM = "disable_alarm";
-        String EDIT_ALARM = "edit_alarm";
-        String EDIT_ALARM_TIME_EXTRA = "edit_alarm_time_extra";
+        @SleepOperation String OPERATION_NONE = "no_operation";
+        @SleepOperation String SNOOZE_CANCELED = "snooze_cancel";
+        @SleepOperation String SHOULD_SKIP = "should_skip";
+        @SleepOperation String DELETE_ALARM = "delete_alarm";
+        @SleepOperation String DISABLE_ALARM = "disable_alarm";
+        @SleepOperation String EDIT_ALARM = "edit_alarm";
+        @SleepOperation String EDIT_ALARM_TIME_EXTRA = "edit_alarm_time_extra";
         //String CAPTCHA_START_FOR_RESULT = "captcha_start_for_result";
 
 }

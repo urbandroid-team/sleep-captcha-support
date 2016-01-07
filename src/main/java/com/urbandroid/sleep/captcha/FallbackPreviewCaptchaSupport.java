@@ -1,16 +1,17 @@
 package com.urbandroid.sleep.captcha;
 
-import android.content.Context;
+import android.app.Activity;
 import android.support.annotation.Nullable;
 
 import com.urbandroid.sleep.captcha.annotation.CaptchaDifficulty;
 import com.urbandroid.sleep.captcha.annotation.CaptchaMode;
+import com.urbandroid.sleep.captcha.annotation.SuppressAlarmMode;
 import com.urbandroid.sleep.captcha.intent.IntentExtraSetter;
 
 public class FallbackPreviewCaptchaSupport extends AbstractCaptchaSupport {
 
-    public FallbackPreviewCaptchaSupport(final Context context) {
-        super(context, null);
+    public FallbackPreviewCaptchaSupport(final Activity activity) {
+        super(activity, null);
     }
 
     @Override
@@ -36,6 +37,11 @@ public class FallbackPreviewCaptchaSupport extends AbstractCaptchaSupport {
     @Override
     public int getDifficulty() {
         return CaptchaDifficulty.VERY_SIMPLE;
+    }
+
+    @Override
+    public int getSuppressAlarmMode() {
+        return SuppressAlarmMode.FULL_ALARM_VOLUME;
     }
 
     @Override

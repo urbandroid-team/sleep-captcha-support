@@ -12,6 +12,7 @@ import com.urbandroid.sleep.captcha.annotation.CaptchaDifficulty;
 import com.urbandroid.sleep.captcha.annotation.CaptchaEvent;
 import com.urbandroid.sleep.captcha.annotation.CaptchaMode;
 import com.urbandroid.sleep.captcha.annotation.SleepOperation;
+import com.urbandroid.sleep.captcha.annotation.SuppressAlarmMode;
 import com.urbandroid.sleep.captcha.domain.CaptchaInfo;
 import com.urbandroid.sleep.captcha.intent.CallbackIntentCreator;
 import com.urbandroid.sleep.captcha.util.IntentUtil;
@@ -20,6 +21,7 @@ import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_ACTION_LAUNCH
 import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_ACTION_SOLVED;
 import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_BACK_INFO;
 import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_CONFIG_DIFFICULTY;
+import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_CONFIG_SUPPRESS_ALARM_MODE;
 import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_ORIGIN_INTENT;
 import static com.urbandroid.sleep.captcha.CaptchaConstant.SUCCESS;
 import static com.urbandroid.sleep.captcha.CaptchaConstant.TAG;
@@ -30,6 +32,7 @@ public class BaseCaptchaLauncher implements CaptchaLauncher {
     protected final Intent originIntent;
 
     protected @CaptchaDifficulty int difficulty = CaptchaDifficulty.VERY_SIMPLE;
+    protected @SuppressAlarmMode int suppressAlarmMode = SuppressAlarmMode.FULL_ALARM_VOLUME;
     protected @CaptchaMode int mode = CaptchaMode.CAPTCHA_MODE_OPERATIONAL;
     protected @SleepOperation String operation = SleepOperation.OPERATION_NONE;
     protected CallbackIntentCreator callbackIntentCreator;
@@ -47,6 +50,12 @@ public class BaseCaptchaLauncher implements CaptchaLauncher {
     @Override
     public CaptchaLauncher difficulty(final @CaptchaDifficulty int difficulty) {
         this.difficulty = difficulty;
+        return this;
+    }
+
+    @Override
+    public CaptchaLauncher suppressAlarmMode(@SuppressAlarmMode int suppressAlarmMode) {
+        this.suppressAlarmMode = suppressAlarmMode;
         return this;
     }
 
@@ -95,13 +104,15 @@ public class BaseCaptchaLauncher implements CaptchaLauncher {
                 return new Intent(CaptchaConstant.CAPTCHA_ACTION_CONFIG)
                         .setClassName(captchaInfo.getPackageName(), captchaInfo.getActivityName())
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        .putExtra(CaptchaConstant.CAPTCHA_CONFIG_DIFFICULTY, difficulty);
+                        .putExtra(CAPTCHA_CONFIG_SUPPRESS_ALARM_MODE, suppressAlarmMode)
+                        .putExtra(CAPTCHA_CONFIG_DIFFICULTY, difficulty);
 
             case CaptchaMode.CAPTCHA_MODE_PREVIEW:
                 return new Intent(CaptchaConstant.CAPTCHA_ACTION_LAUNCH)
                         .setClassName(captchaInfo.getPackageName(), captchaInfo.getActivityName())
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        .putExtra(CaptchaConstant.CAPTCHA_CONFIG_DIFFICULTY, difficulty)
+                        .putExtra(CAPTCHA_CONFIG_DIFFICULTY, difficulty)
+                        .putExtra(CAPTCHA_CONFIG_SUPPRESS_ALARM_MODE, suppressAlarmMode)
                         .putExtra(CaptchaConstant.PREVIEW, true);
 
             case CaptchaMode.CAPTCHA_MODE_OPERATIONAL:
@@ -138,6 +149,7 @@ public class BaseCaptchaLauncher implements CaptchaLauncher {
                         .putExtra(CaptchaEvent.CAPTCHA_BACK_INTENT_ALIVE, captchaAliveIntent)
                         // config params
                         .putExtra(CAPTCHA_CONFIG_DIFFICULTY, difficulty)
+                        .putExtra(CAPTCHA_CONFIG_SUPPRESS_ALARM_MODE, suppressAlarmMode)
                         .putExtra(operation, true);
         }
 

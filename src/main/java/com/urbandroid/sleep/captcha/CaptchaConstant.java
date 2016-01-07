@@ -16,14 +16,15 @@ public interface CaptchaConstant {
     String SUCCESS = "success";
     String PREVIEW = "preview";
     String TIME_ADD = "timeAddInSeconds";
-    String CAPTCHA_CONFIG_SUSPEND_VOLUME_MODE = "suspend-volume-mode";
+    String CAPTCHA_CONFIG_SUPPRESS_ALARM_MODE = "suppress-alarm-mode";
     String CAPTCHA_CONFIG_DIFFICULTY = "difficulty";
 
-    String ALARM_ACTIVITY_CLASS = "alarm_class";
     String ACTION_FINISH_CAPTCHA = "com.urbandroid.sleep.ACTION_FINISH_CAPTCHA";
 
     String META_BACK_COMPATIBILITY_ID   = "com.urbandroid.sleep.captcha.meta.id";
     String META_ORDER                   = "com.urbandroid.sleep.captcha.meta.order";
     String META_HAS_DIFFICULTY          = "com.urbandroid.sleep.captcha.meta.has_difficulty";
+
+    String ALARM_SNOOZE_ACTION = "com.urbandroid.sleep.alarmclock.ALARM_SNOOZE";
 
 }

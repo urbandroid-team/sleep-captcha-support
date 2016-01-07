@@ -23,7 +23,7 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.SOURCE)
 public @interface CaptchaMode {
 
-    int CAPTCHA_MODE_OPERATIONAL = 1;
-    int CAPTCHA_MODE_PREVIEW = 2;
-    int CAPTCHA_MODE_CONFIGURATION = 3;
+    @CaptchaMode int CAPTCHA_MODE_OPERATIONAL = 1;
+    @CaptchaMode int CAPTCHA_MODE_PREVIEW = 2;
+    @CaptchaMode int CAPTCHA_MODE_CONFIGURATION = 3;
 }
