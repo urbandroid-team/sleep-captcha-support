@@ -3,6 +3,7 @@ package com.urbandroid.sleep.captcha.finder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.urbandroid.sleep.captcha.domain.CaptchaGroup;
 import com.urbandroid.sleep.captcha.domain.CaptchaInfo;
 
 import java.util.List;
@@ -33,6 +34,12 @@ public class FallbackCaptchaFinder implements CaptchaFinder{
     @NonNull
     public List<CaptchaInfo> lookup(final @Nullable CaptchaInfoFilter filter) {
         return captchaFinder.lookup(filter);
+    }
+
+    @Override
+    @NonNull
+    public List<CaptchaGroup> findGroups(final @Nullable CaptchaInfoFilter filter) {
+        return captchaFinder.findGroups(filter);
     }
 
     @Override
