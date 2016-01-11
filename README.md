@@ -52,7 +52,8 @@ Sleep as Android will not find your captcha.
 ## CaptchaSupport object
 
 All interaction between Sleep and Captcha is covered by CaptchaSupport object. It must
-be created inside onCreate method of Activity.
+be created inside onCreate and onNewIntent method of Activity. Also proper releasing captcha support
+receivers must be called from onDestroy method.
 
 ```java
     protected void onCreate(final Bundle savedInstanceState) {
@@ -60,17 +61,29 @@ be created inside onCreate method of Activity.
         captchaSupport = CaptchaSupportFactory.create(this);
         ...
     }
+
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        captchaSupport = CaptchaSupportFactory.create(this, intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        captchaSupport.destroy();
+        super.onDestroy();
+    }
+
 ```
 
 When CaptchaSupport object is created you can
 * check in which mode (Preview, Configuration, Operational) is captcha running by CaptchaSupport.getMode()
 or CaptchaSupport.isPreviewMode(), isOperationalMode(), isConfigurationMode()
 * get difficulty (1-5) - use CaptchaSupport.getDifficulty()
-* set up time remaining listener
+* set up time remaining listener CaptchaSupport.setRemainingTimeListener()
 * call solved method when captcha is successfully resolved
 * call unsolved method when captcha was not solved but user left activity
 * call alive in order to reset timeout for solving captcha
-* or use advanced features like CaptchaFinder for getting list of all available captchs on mobile
+* or use advanced features like CaptchaFinder for getting list of all available captchas on mobile
 and launch them via CaptchaLauncher
 
 ## Difficulty
@@ -85,6 +98,21 @@ Put following lines in AndroidManifest file, in case your captcha need support s
 To get current captcha difficulty call CaptchaSupport.getDifficulty().
 Use CaptchaDifficulty annotation to get all possible values.
 
+## Captcha Order
+when your application contains more than one captcha activity, you can find out usefull to sort them in
+Sleep app by declaring order.
+```xml
+    <activity ...>
+        ...
+        <meta-data android:name="com.urbandroid.sleep.captcha.meta.order" android:value="1"/>
+        ...
+    </activity>
+    <activity ...>
+        ...
+        <meta-data android:name="com.urbandroid.sleep.captcha.meta.order" android:value="2"/>
+        ...
+    </activity>
+```
 
 ## Recommendation
 * CaptchaSupport object must be created in activity onCreate method

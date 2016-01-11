@@ -1,6 +1,7 @@
 package com.urbandroid.sleep.captcha;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.CallSuper;
@@ -41,6 +42,23 @@ public class GenericCaptchaActivity extends Activity {
     @CallSuper
     public void onBackPressed() {
         captchaSupport.unsolved();
+    }
+
+    @Override
+    public void onUserInteraction() {
+        captchaSupport.alive();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        captchaSupport = CaptchaSupportFactory.create(this, intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        captchaSupport.destroy();
+        super.onDestroy();
     }
 
     public CaptchaSupport getCaptchaSupport() {
