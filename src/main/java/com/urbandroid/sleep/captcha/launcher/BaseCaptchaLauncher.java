@@ -30,6 +30,7 @@ public class BaseCaptchaLauncher implements CaptchaLauncher {
 
     protected final Context context;
     protected final Intent originIntent;
+    protected final String captchaClassName;
 
     protected @CaptchaDifficulty int difficulty = CaptchaDifficulty.VERY_SIMPLE;
     protected @SuppressAlarmMode int suppressAlarmMode = SuppressAlarmMode.FULL_ALARM_VOLUME;
@@ -38,12 +39,9 @@ public class BaseCaptchaLauncher implements CaptchaLauncher {
     protected CallbackIntentCreator callbackIntentCreator;
     protected int flags = Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP;
 
-    public BaseCaptchaLauncher(final @NonNull Context context) {
-        this(context, null);
-    }
-
-    public BaseCaptchaLauncher(final @NonNull Context context, final @Nullable Intent originIntent) {
+    public BaseCaptchaLauncher(final @NonNull Context context, final String captchaClassName, final @Nullable Intent originIntent) {
         this.context = context;
+        this.captchaClassName = captchaClassName;
         this.originIntent = originIntent;
     }
 
@@ -121,7 +119,7 @@ public class BaseCaptchaLauncher implements CaptchaLauncher {
                                 new Intent(CAPTCHA_ACTION_SOLVED)
                                         .putExtra(CAPTCHA_ORIGIN_INTENT, originIntent)
                                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                        .setPackage(context.getPackageName())
+                                        .setClassName(context.getPackageName(), captchaClassName)
                                 :
                                 callbackIntentCreator.createSolvedIntent(context, operation);
                 solvedCaptchaIntent.putExtra(operation, true);
@@ -133,7 +131,7 @@ public class BaseCaptchaLauncher implements CaptchaLauncher {
                                         .putExtra(CAPTCHA_ORIGIN_INTENT, originIntent)
                                         .putExtra(SUCCESS, false)
                                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                        .setPackage(context.getPackageName())
+                                        .setClassName(context.getPackageName(), captchaClassName)
                                 :
                                 callbackIntentCreator.createUnsolvedIntent(context, operation);
                 unsolvedCaptchaIntent.putExtra(CAPTCHA_BACK_INFO, captchaInfo);

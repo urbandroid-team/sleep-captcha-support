@@ -115,6 +115,8 @@ Sleep app by declaring order.
 ```
 
 ## Recommendation
+* Don't forget to define your activity exported="true" as singleTop otherwise a captcha
+  will not be accessible and/or duplicated.
 * CaptchaSupport object must be created in activity onCreate method
 * override activity onUserInteraction method to call CaptchaSupport.alive() method
 * override activity onBackPressed method to call CaptchaSupport.unsolved()

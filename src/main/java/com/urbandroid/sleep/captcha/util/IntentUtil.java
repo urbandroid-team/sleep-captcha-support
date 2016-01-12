@@ -46,9 +46,11 @@ public class IntentUtil {
             builder.append("null");
         } else {
             if (i.getAction() != null) {
-                builder.append("(").append(i.getAction()).append(") ");
+                builder.append("(action: ").append(i.getAction()).append(") ");
             }
-
+            if (i.getComponent() != null) {
+                builder.append("(class: ").append(i.getComponent().getClassName()).append(") ");
+            }
             traceBundle(builder, i.getExtras());
         }
         builder.append("]");

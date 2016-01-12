@@ -27,6 +27,10 @@ public class CaptchaSupportFactory {
     @NonNull
     public static CaptchaSupport create(final @NonNull Activity activity, final @Nullable Intent intent, final int aliveTimeout) {
 
+        if (CaptchaSupportHolder.get() != null) {
+            CaptchaSupportHolder.get().destroy();
+        }
+
         final boolean isCaptchaLaunchIntent = intent != null && CaptchaConstant.CAPTCHA_ACTION_LAUNCH.equals(intent.getAction());
         final boolean isCaptchaSolvedCallbackIntent = intent != null && intent.hasExtra(CAPTCHA_ORIGIN_INTENT);
 

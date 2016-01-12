@@ -18,6 +18,8 @@ import com.urbandroid.sleep.captcha.launcher.BaseCaptchaLauncher;
 import com.urbandroid.sleep.captcha.launcher.CaptchaLauncher;
 
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 public abstract class AbstractCaptchaSupport implements CaptchaSupport {
 
@@ -31,7 +33,7 @@ public abstract class AbstractCaptchaSupport implements CaptchaSupport {
     protected int aliveTimeoutInSeconds = DEFAULT_ALIVE_TIMEOUT_IN_SECONDS;
     private long lastAliveSent = -1;
 
-    private RemainingTimeListener remainingTimeListener;
+    private final AtomicReference<RemainingTimeListener> remainingTimeListener = new AtomicReference<>();
     private final Handler handler = new Handler();
 
     private final RemainingTimeRunnable remainingTimeRunnable = new RemainingTimeRunnable();
@@ -41,12 +43,9 @@ public abstract class AbstractCaptchaSupport implements CaptchaSupport {
         this.context = activity.getApplicationContext();
         this.intent = intent;
         this.finder = new BaseCaptchaFinder(context);
-        this.launcher = new BaseCaptchaLauncher(context, intent);
+        this.launcher = new BaseCaptchaLauncher(context, activity.getClass().getName(), intent);
 
-        final IntentFilter filter = new IntentFilter();
-        filter.addAction(CaptchaConstant.ALARM_SNOOZE_ACTION);
-        filter.addAction(CaptchaConstant.ACTION_FINISH_CAPTCHA);
-        context.registerReceiver(finishReceiver, filter);
+        finishReceiver.register();
     }
 
     @Override
@@ -59,7 +58,7 @@ public abstract class AbstractCaptchaSupport implements CaptchaSupport {
             Log.w(TAG, "SuppressAlarmMode: Full Alarm Volume - RemainingTimeListener will be not active");
             return this;
         }
-        this.remainingTimeListener = remainingTimeListener;
+        this.remainingTimeListener.set(remainingTimeListener);
         handler.removeCallbacks(remainingTimeRunnable);
         if (remainingTimeListener != null) {
             handler.postDelayed(remainingTimeRunnable, 500);
@@ -116,6 +115,7 @@ public abstract class AbstractCaptchaSupport implements CaptchaSupport {
     private class RemainingTimeRunnable implements Runnable {
         @Override
         public void run() {
+            final RemainingTimeListener remainingTimeListener = AbstractCaptchaSupport.this.remainingTimeListener.get();
             if (remainingTimeListener == null) {
                 return;
             }
@@ -126,16 +126,44 @@ public abstract class AbstractCaptchaSupport implements CaptchaSupport {
 
     @Override
     public void destroy() {
-        context.unregisterReceiver(finishReceiver);
+        finishReceiver.unregister();
         if (remainingTimeRunnable != null) {
             handler.removeCallbacks(remainingTimeRunnable);
+            remainingTimeListener.set(null);
         }
     }
 
-    private BroadcastReceiver finishReceiver = new BroadcastReceiver() {
+    private final FinishReceiver finishReceiver = new FinishReceiver();
+
+    private class FinishReceiver extends BroadcastReceiver {
+
+        private final AtomicBoolean isRegistered = new AtomicBoolean(false);
+
         @Override
         public void onReceive(Context context, Intent intent) {
             activity.finish();
+        }
+
+        public void register(){
+
+            if (isRegistered.get()){
+                return;
+            }
+
+            final IntentFilter filter = new IntentFilter();
+            filter.addAction(CaptchaConstant.ALARM_SNOOZE_ACTION);
+            filter.addAction(CaptchaConstant.ACTION_FINISH_CAPTCHA);
+            isRegistered.set(true);
+            context.registerReceiver(this, filter);
+
+        }
+
+        public void unregister(){
+            if (!isRegistered.get()){
+                return;
+            }
+            context.unregisterReceiver(this);
+            isRegistered.set(false);
         }
     };
 

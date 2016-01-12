@@ -39,8 +39,6 @@ public class BaseCaptchaFinder implements CaptchaFinder {
         final PackageManager packageManager = context.getPackageManager();
         final Map<String, CaptchaGroup> groups = new HashMap<>();
         final List<ApplicationInfo> apps = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
-        Log.i(TAG, "Apps: " + apps.size());
-
         for(final CaptchaInfo captcha: lookup(filter)) {
             final CaptchaGroup group = findGroup(packageManager, groups, apps, captcha.getPackageName());
             if (group != null) {
@@ -63,8 +61,8 @@ public class BaseCaptchaFinder implements CaptchaFinder {
         for (final ApplicationInfo app: apps) {
             if (packageName.equals(app.packageName)) {
                 final CharSequence label = app.loadLabel(packageManager);
-                final BaseCaptchaGroup group = new BaseCaptchaGroup(app.packageName, label == null ? app.packageName : label.toString());
-                if (groups != null) {
+                final BaseCaptchaGroup group = new BaseCaptchaGroup(packageName, label == null ? packageName : label.toString());
+                if (groups != null && !groups.containsKey(packageName)) {
                     groups.put(packageName, group);
                 }
                 return group;
@@ -89,7 +87,7 @@ public class BaseCaptchaFinder implements CaptchaFinder {
         // look up all activities with action captcha launch in intent-filter
         final Intent launchCaptchaIntent = new Intent(CAPTCHA_ACTION_LAUNCH);
         for (final ResolveInfo resolveInfo : packageManager.queryIntentActivities(launchCaptchaIntent, PackageManager.GET_META_DATA)) {
-            Log.i(TAG, "Found: " + resolveInfo);
+            //Log.d(TAG, "Found: " + resolveInfo);
 
             final BaseCaptchaInfo captchaInfo = BaseCaptchaInfo.build(
                     context,
@@ -98,7 +96,7 @@ public class BaseCaptchaFinder implements CaptchaFinder {
             );
             final CaptchaGroup group = findGroup(packageManager, null, apps, captchaInfo.getPackageName());
 
-            Log.i(TAG, "\tCaptcha: " + captchaInfo);
+            //Log.d(TAG, "\tCaptcha: " + captchaInfo);
             if (filter == null || filter.apply(group, captchaInfo)) {
                 result.add(captchaInfo);
             }
@@ -121,11 +119,14 @@ public class BaseCaptchaFinder implements CaptchaFinder {
         Collections.sort(result, CaptchaInfo.ORDER_COMPARATOR);
 
         if (!result.isEmpty()) {
+            Log.d(TAG, "Found Captchas:" );
             for (final CaptchaInfo captchaInfo : result) {
-                Log.i(TAG, captchaInfo.toString());
+                if (!captchaInfo.getPackageName().equals(context.getPackageName())) {
+                    Log.d(TAG, captchaInfo.toString());
+                }
             }
         } else {
-            Log.i(TAG, "No captcha found");
+            Log.w(TAG, "No captcha found");
         }
 
 
