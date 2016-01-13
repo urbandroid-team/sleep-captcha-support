@@ -20,18 +20,18 @@ import static com.urbandroid.sleep.captcha.CaptchaConstant.PREVIEW;
 
 public class BaseCaptchaSupport extends AbstractCaptchaSupport {
 
-    protected BaseCaptchaSupport(final @NonNull Activity activity, final @NonNull Intent intent) {
-        super(activity, intent);
+    protected BaseCaptchaSupport(final @NonNull Activity activity, final @NonNull Intent intent, final int aliveTimeout) {
+        super(activity, intent, aliveTimeout);
     }
 
     @Override
     public boolean isPreviewMode(){
-        return intent.getBooleanExtra(PREVIEW, false);
+        return intent != null && intent.getBooleanExtra(PREVIEW, false);
     }
 
     @Override
     public boolean isConfigurationMode(){
-        return CAPTCHA_ACTION_CONFIG.equals(intent.getAction());
+        return intent != null && CAPTCHA_ACTION_CONFIG.equals(intent.getAction());
     }
 
     @Override
@@ -55,18 +55,18 @@ public class BaseCaptchaSupport extends AbstractCaptchaSupport {
     @SuppressWarnings("ResourceType")
     @CaptchaDifficulty
     public int getDifficulty(){
-        return intent.getIntExtra(CAPTCHA_CONFIG_DIFFICULTY, CaptchaDifficulty.VERY_SIMPLE);
+        return intent != null ? intent.getIntExtra(CAPTCHA_CONFIG_DIFFICULTY, CaptchaDifficulty.VERY_SIMPLE): CaptchaDifficulty.VERY_SIMPLE;
     }
 
     @Override
     @SuppressWarnings("ResourceType")
     @SuppressAlarmMode
     public int getSuppressAlarmMode() {
-        return intent.getIntExtra(CAPTCHA_CONFIG_SUPPRESS_ALARM_MODE, SuppressAlarmMode.FULL_ALARM_VOLUME);
+        return intent != null ? intent.getIntExtra(CAPTCHA_CONFIG_SUPPRESS_ALARM_MODE, SuppressAlarmMode.FULL_ALARM_VOLUME): SuppressAlarmMode.FULL_ALARM_VOLUME;
     }
 
     protected boolean hasOperation(){
-        return !intent.hasExtra(SleepOperation.OPERATION_NONE);
+        return intent != null && !intent.hasExtra(SleepOperation.OPERATION_NONE);
     }
 
     @Override
@@ -100,7 +100,7 @@ public class BaseCaptchaSupport extends AbstractCaptchaSupport {
         }
 
         final Intent callbackIntent = intent != null ? (Intent) intent.getParcelableExtra(event) : null;
-        Log.i(TAG, " calling " + event + ": " + callbackIntent);
+        Log.i(TAG, "Calling " + event + (callbackIntent != null ? ": " + callbackIntent: ""));
         if (callbackIntent == null) {
             return;
         }

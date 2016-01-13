@@ -16,6 +16,7 @@ public interface CaptchaConstant {
     String SUCCESS = "success";
     String PREVIEW = "preview";
     String TIME_ADD = "timeAddInSeconds";
+    String CAPTCHA_CONFIG_ALIVE_TIMEOUT = "aliveTimeout";
     String CAPTCHA_CONFIG_SUPPRESS_ALARM_MODE = "suppress-alarm-mode";
     String CAPTCHA_CONFIG_DIFFICULTY = "difficulty";
 

@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
-import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -38,13 +37,13 @@ public abstract class AbstractCaptchaSupport implements CaptchaSupport {
 
     private final RemainingTimeRunnable remainingTimeRunnable = new RemainingTimeRunnable();
 
-    protected AbstractCaptchaSupport(final @NonNull Activity activity, final @Nullable Intent intent) {
+    protected AbstractCaptchaSupport(final @NonNull Activity activity, final @Nullable Intent intent, int aliveTimeout) {
         this.activity = activity;
         this.context = activity.getApplicationContext();
         this.intent = intent;
         this.finder = new BaseCaptchaFinder(context);
-        this.launcher = new BaseCaptchaLauncher(context, activity.getClass().getName(), intent);
-
+        this.launcher = new BaseCaptchaLauncher(context, activity.getClass().getName(), intent, aliveTimeout);
+        aliveTimeout(aliveTimeout);
         finishReceiver.register();
     }
 
@@ -67,16 +66,12 @@ public abstract class AbstractCaptchaSupport implements CaptchaSupport {
     }
 
     @Override
-    public CaptchaSupport aliveTimeout(
-            final @IntRange(
-                    from= MIN_ALIVE_TIMEOUT_IN_SECONDS,
-                    to= MAX_ALIVE_TIMEOUT_IN_SECONDS
-            ) int timeoutInSeconds)
-    {
-        if (aliveTimeoutInSeconds < MIN_ALIVE_TIMEOUT_IN_SECONDS || aliveTimeoutInSeconds > MAX_ALIVE_TIMEOUT_IN_SECONDS) {
+    public CaptchaSupport aliveTimeout(final int timeoutInSeconds) {
+        if (timeoutInSeconds < MIN_ALIVE_TIMEOUT_IN_SECONDS || timeoutInSeconds > MAX_ALIVE_TIMEOUT_IN_SECONDS) {
             Log.w(TAG, "aliveTimeout out of range <" + MIN_ALIVE_TIMEOUT_IN_SECONDS + ", " + MAX_ALIVE_TIMEOUT_IN_SECONDS +">");
             return this;
         }
+        Log.d(TAG, "aliveTimeout set: " + timeoutInSeconds);
         this.aliveTimeoutInSeconds = timeoutInSeconds;
         return this;
     }
@@ -103,10 +98,13 @@ public abstract class AbstractCaptchaSupport implements CaptchaSupport {
 
     protected abstract void doAlive();
 
+    @NonNull
     @Override
     public CaptchaFinder getFinder() {
         return finder;
     }
+
+    @NonNull
     @Override
     public CaptchaLauncher getLauncher() {
         return launcher;
@@ -131,6 +129,11 @@ public abstract class AbstractCaptchaSupport implements CaptchaSupport {
             handler.removeCallbacks(remainingTimeRunnable);
             remainingTimeListener.set(null);
         }
+    }
+
+    @Override
+    public int getAliveTimeout() {
+        return aliveTimeoutInSeconds;
     }
 
     private final FinishReceiver finishReceiver = new FinishReceiver();

@@ -1,5 +1,6 @@
 package com.urbandroid.sleep.captcha;
 
+import android.support.annotation.IntRange;
 import android.support.annotation.Nullable;
 
 import com.urbandroid.sleep.captcha.annotation.CaptchaDifficulty;
@@ -19,7 +20,15 @@ public interface CaptchaSupport {
 
     CaptchaSupport setRemainingTimeListener(@Nullable RemainingTimeListener remainingTimeListener);
 
-    CaptchaSupport aliveTimeout(int timeoutInSeconds);
+    CaptchaSupport aliveTimeout(
+            @IntRange(
+                    from= MIN_ALIVE_TIMEOUT_IN_SECONDS,
+                    to= MAX_ALIVE_TIMEOUT_IN_SECONDS
+            )
+            int timeoutInSeconds
+    );
+
+    int getAliveTimeout();
     int getRemainingTime();
 
     boolean isPreviewMode();

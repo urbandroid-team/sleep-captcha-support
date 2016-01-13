@@ -10,8 +10,8 @@ import com.urbandroid.sleep.captcha.intent.IntentExtraSetter;
 
 public class FallbackPreviewCaptchaSupport extends AbstractCaptchaSupport {
 
-    public FallbackPreviewCaptchaSupport(final Activity activity) {
-        super(activity, null);
+    public FallbackPreviewCaptchaSupport(final Activity activity, final int aliveTimeout) {
+        super(activity, null, aliveTimeout);
     }
 
     @Override

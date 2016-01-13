@@ -20,11 +20,14 @@ import com.urbandroid.sleep.captcha.util.IntentUtil;
 import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_ACTION_LAUNCH;
 import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_ACTION_SOLVED;
 import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_BACK_INFO;
+import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_CONFIG_ALIVE_TIMEOUT;
 import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_CONFIG_DIFFICULTY;
 import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_CONFIG_SUPPRESS_ALARM_MODE;
 import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_ORIGIN_INTENT;
 import static com.urbandroid.sleep.captcha.CaptchaConstant.SUCCESS;
 import static com.urbandroid.sleep.captcha.CaptchaConstant.TAG;
+import static com.urbandroid.sleep.captcha.CaptchaSupport.MAX_ALIVE_TIMEOUT_IN_SECONDS;
+import static com.urbandroid.sleep.captcha.CaptchaSupport.MIN_ALIVE_TIMEOUT_IN_SECONDS;
 
 public class BaseCaptchaLauncher implements CaptchaLauncher {
 
@@ -38,16 +41,35 @@ public class BaseCaptchaLauncher implements CaptchaLauncher {
     protected @SleepOperation String operation = SleepOperation.OPERATION_NONE;
     protected CallbackIntentCreator callbackIntentCreator;
     protected int flags = Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP;
+    private int aliveTimeout = -1;
 
     public BaseCaptchaLauncher(final @NonNull Context context, final String captchaClassName, final @Nullable Intent originIntent) {
+        this(context, captchaClassName, originIntent, -1);
+    }
+
+    public BaseCaptchaLauncher(final @NonNull Context context, final String captchaClassName, final @Nullable Intent originIntent, int aliveTimeout) {
         this.context = context;
         this.captchaClassName = captchaClassName;
         this.originIntent = originIntent;
+        this.aliveTimeout = aliveTimeout;
+        if (originIntent != null && aliveTimeout != -1) {
+            originIntent.putExtra(CAPTCHA_CONFIG_ALIVE_TIMEOUT, aliveTimeout);
+        }
     }
 
     @Override
     public CaptchaLauncher difficulty(final @CaptchaDifficulty int difficulty) {
         this.difficulty = difficulty;
+        return this;
+    }
+
+    @Override
+    public CaptchaLauncher aliveTimeout(final int aliveTimeoutInSeconds) {
+        if (aliveTimeoutInSeconds < MIN_ALIVE_TIMEOUT_IN_SECONDS || aliveTimeoutInSeconds > MAX_ALIVE_TIMEOUT_IN_SECONDS) {
+            Log.w(TAG, "aliveTimeout out of range <" + MIN_ALIVE_TIMEOUT_IN_SECONDS + ", " + MAX_ALIVE_TIMEOUT_IN_SECONDS +">");
+            return this;
+        }
+        this.aliveTimeout = aliveTimeoutInSeconds;
         return this;
     }
 
@@ -83,12 +105,14 @@ public class BaseCaptchaLauncher implements CaptchaLauncher {
 
     @Override
     public void start(final @NonNull CaptchaInfo captchaInfo) {
-        Log.i(TAG, "Starting captcha mode: " + mode + " difficulty: " + difficulty + " operation: " + operation + " " + captchaInfo);
+        Log.i(TAG,
+                "Starting captcha mode: " + mode +
+                        " difficulty: " + difficulty +
+                        " aliveTimeout: " + aliveTimeout +
+                        " operation: " + operation + " " + captchaInfo);
 
         final Intent intent = prepareIntent(captchaInfo);
-        final StringBuilder sb = new StringBuilder();
-        IntentUtil.traceIntent(sb, intent);
-        Log.d(TAG, sb.toString());
+        Log.d(TAG, IntentUtil.traceIntent(intent));
 
         context.startActivity(intent);
     }
@@ -97,21 +121,30 @@ public class BaseCaptchaLauncher implements CaptchaLauncher {
     @Override
     public Intent prepareIntent(final @NonNull CaptchaInfo captchaInfo) {
 
+        final Intent intent;
         switch (mode) {
             case CaptchaMode.CAPTCHA_MODE_CONFIGURATION:
-                return new Intent(CaptchaConstant.CAPTCHA_ACTION_CONFIG)
+                intent = new Intent(CaptchaConstant.CAPTCHA_ACTION_CONFIG)
                         .setClassName(captchaInfo.getPackageName(), captchaInfo.getActivityName())
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         .putExtra(CAPTCHA_CONFIG_SUPPRESS_ALARM_MODE, suppressAlarmMode)
                         .putExtra(CAPTCHA_CONFIG_DIFFICULTY, difficulty);
+                if (aliveTimeout != -1) {
+                    intent.putExtra(CAPTCHA_CONFIG_ALIVE_TIMEOUT, aliveTimeout);
+                }
+                return intent;
 
             case CaptchaMode.CAPTCHA_MODE_PREVIEW:
-                return new Intent(CaptchaConstant.CAPTCHA_ACTION_LAUNCH)
+                intent = new Intent(CaptchaConstant.CAPTCHA_ACTION_LAUNCH)
                         .setClassName(captchaInfo.getPackageName(), captchaInfo.getActivityName())
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         .putExtra(CAPTCHA_CONFIG_DIFFICULTY, difficulty)
                         .putExtra(CAPTCHA_CONFIG_SUPPRESS_ALARM_MODE, suppressAlarmMode)
                         .putExtra(CaptchaConstant.PREVIEW, true);
+                if (aliveTimeout != -1) {
+                    intent.putExtra(CAPTCHA_CONFIG_ALIVE_TIMEOUT, aliveTimeout);
+                }
+                return intent;
 
             case CaptchaMode.CAPTCHA_MODE_OPERATIONAL:
                 final Intent solvedCaptchaIntent =
@@ -123,7 +156,7 @@ public class BaseCaptchaLauncher implements CaptchaLauncher {
                                 :
                                 callbackIntentCreator.createSolvedIntent(context, operation);
                 solvedCaptchaIntent.putExtra(operation, true);
-                solvedCaptchaIntent.putExtra(CAPTCHA_BACK_INFO, captchaInfo);
+                solvedCaptchaIntent.putExtra(CAPTCHA_BACK_INFO, captchaInfo.getId());
 
                 final Intent unsolvedCaptchaIntent =
                         callbackIntentCreator == null ?
@@ -134,11 +167,11 @@ public class BaseCaptchaLauncher implements CaptchaLauncher {
                                         .setClassName(context.getPackageName(), captchaClassName)
                                 :
                                 callbackIntentCreator.createUnsolvedIntent(context, operation);
-                unsolvedCaptchaIntent.putExtra(CAPTCHA_BACK_INFO, captchaInfo);
+                unsolvedCaptchaIntent.putExtra(CAPTCHA_BACK_INFO, captchaInfo.getId());
 
                 final Intent captchaAliveIntent = new Intent(CaptchaConstant.CAPTCHA_ACTION_ALIVE);
 
-                return new Intent(CAPTCHA_ACTION_LAUNCH)
+                intent = new Intent(CAPTCHA_ACTION_LAUNCH)
                         .setClassName(captchaInfo.getPackageName(), captchaInfo.getActivityName())
                         .setFlags(flags)
                         // back call intents
@@ -149,6 +182,11 @@ public class BaseCaptchaLauncher implements CaptchaLauncher {
                         .putExtra(CAPTCHA_CONFIG_DIFFICULTY, difficulty)
                         .putExtra(CAPTCHA_CONFIG_SUPPRESS_ALARM_MODE, suppressAlarmMode)
                         .putExtra(operation, true);
+                if (aliveTimeout != -1) {
+                    intent.putExtra(CAPTCHA_CONFIG_ALIVE_TIMEOUT, aliveTimeout);
+                }
+                return intent;
+
         }
 
         throw new CaptchaSupportException("Unknown captcha mode: " + mode);

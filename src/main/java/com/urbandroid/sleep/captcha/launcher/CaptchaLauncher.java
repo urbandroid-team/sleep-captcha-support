@@ -16,6 +16,7 @@ public interface CaptchaLauncher {
     CaptchaLauncher operation(@SleepOperation String operation);
     CaptchaLauncher callbackIntentCreator(@NonNull CallbackIntentCreator callbackIntentCreator);
     CaptchaLauncher addFlags(int flags);
+    CaptchaLauncher aliveTimeout(int aliveTimeoutInSeconds);
     CaptchaLauncher mode(@CaptchaMode int mode);
     CaptchaLauncher suppressAlarmMode(@SuppressAlarmMode int suppressAlarmMode);
     void start(@NonNull CaptchaInfo captchaInfo);
