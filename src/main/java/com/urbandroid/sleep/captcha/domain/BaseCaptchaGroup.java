@@ -45,4 +45,20 @@ public class BaseCaptchaGroup implements CaptchaGroup {
     public List<CaptchaInfo> getCaptchaInfos() {
         return captchaInfos;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BaseCaptchaGroup that = (BaseCaptchaGroup) o;
+
+        return id.equals(that.id);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }

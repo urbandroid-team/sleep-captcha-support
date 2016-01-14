@@ -21,7 +21,7 @@ apply plugin: 'com.jfrog.bintray'
 ext {
     PUBLISH_GROUP_ID = 'com.urbandroid.sleep'
     PUBLISH_ARTIFACT_ID = 'captcha-support'
-    PUBLISH_VERSION = '0.1.8'
+    PUBLISH_VERSION = '0.1.9'
 }
 
 // from: 'https://raw.githubusercontent.com/blundell/release-android-library/master/android-release-aar.gradle'

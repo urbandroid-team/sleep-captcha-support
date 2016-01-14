@@ -138,6 +138,21 @@ public class BaseCaptchaInfo implements CaptchaInfo{
         dest.writeByte((byte) (configurable ? 0x01 : 0x00));
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BaseCaptchaInfo that = (BaseCaptchaInfo) o;
+
+        return id == that.id;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
+    }
 
     @SuppressWarnings("unused")
     public static final Parcelable.Creator<BaseCaptchaInfo> CREATOR = new Parcelable.Creator<BaseCaptchaInfo>() {
