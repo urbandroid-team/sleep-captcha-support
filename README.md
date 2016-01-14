@@ -56,6 +56,8 @@ be created inside onCreate and onNewIntent method of Activity. Also proper relea
 receivers must be called from onDestroy method.
 
 ```java
+    private CaptchaSupport captchaSupport;
+
     protected void onCreate(final Bundle savedInstanceState) {
         ...
         captchaSupport = CaptchaSupportFactory.create(this);
@@ -69,11 +71,13 @@ receivers must be called from onDestroy method.
 
     @Override
     protected void onDestroy() {
-        captchaSupport.destroy();
         super.onDestroy();
+        captchaSupport.destroy();
     }
 
 ```
+
+Note that, creation captcha support object in onNewIntent has different constructor and must have 2-nd argument intent.
 
 When CaptchaSupport object is created you can
 * check in which mode (Preview, Configuration, Operational) is captcha running by CaptchaSupport.getMode()
@@ -87,7 +91,7 @@ or CaptchaSupport.isPreviewMode(), isOperationalMode(), isConfigurationMode()
 and launch them via CaptchaLauncher
 
 ## Difficulty
-Put following lines in AndroidManifest file, in case your captcha need support several level of difficulty
+In case your captcha need support several level of difficulty, put following lines in AndroidManifest file,
 ```xml
     <activity ...>
         ...
@@ -95,11 +99,11 @@ Put following lines in AndroidManifest file, in case your captcha need support s
         ...
     </activity>
 ```
-To get current captcha difficulty call CaptchaSupport.getDifficulty().
+In order to get current captcha difficulty, call CaptchaSupport.getDifficulty().
 Use CaptchaDifficulty annotation to get all possible values.
 
 ## Captcha Order
-when your application contains more than one captcha activity, you can find out usefull to sort them in
+When your application contains more than one captcha activity, you can find out useful to sort them in
 Sleep app by declaring order.
 ```xml
     <activity ...>
@@ -115,11 +119,11 @@ Sleep app by declaring order.
 ```
 
 ## Recommendation
-* Don't forget to define your activity exported="true" as singleTop otherwise a captcha
+* Don't forget to define your activity with exported="true" and as singleTop otherwise the captcha
   will not be accessible and/or duplicated.
-* CaptchaSupport object must be created in activity onCreate method
-* override activity onUserInteraction method to call CaptchaSupport.alive() method
-* override activity onBackPressed method to call CaptchaSupport.unsolved()
+* CaptchaSupport object must be created in Activity.onCreate or onPostCreate method and also onNewIntent
+* override Activity.onUserInteraction() method to call CaptchaSupport.alive() method
+* override Activity.onBackPressed() method to call CaptchaSupport.unsolved()
 
 ## Read more and get started
 
