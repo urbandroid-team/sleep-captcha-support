@@ -10,6 +10,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.urbandroid.sleep.captcha.annotation.CaptchaDifficulty;
+import com.urbandroid.sleep.captcha.annotation.CaptchaMode;
+import com.urbandroid.sleep.captcha.annotation.SleepOperation;
 import com.urbandroid.sleep.captcha.annotation.SuppressAlarmMode;
 import com.urbandroid.sleep.captcha.finder.BaseCaptchaFinder;
 import com.urbandroid.sleep.captcha.finder.CaptchaFinder;
@@ -19,6 +22,11 @@ import com.urbandroid.sleep.captcha.launcher.CaptchaLauncher;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+
+import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_ACTION_CONFIG;
+import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_CONFIG_DIFFICULTY;
+import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_CONFIG_SUPPRESS_ALARM_MODE;
+import static com.urbandroid.sleep.captcha.CaptchaConstant.PREVIEW;
 
 public abstract class AbstractCaptchaSupport implements CaptchaSupport {
 
@@ -46,6 +54,52 @@ public abstract class AbstractCaptchaSupport implements CaptchaSupport {
         aliveTimeout(aliveTimeout);
         finishReceiver.register();
     }
+
+    @Override
+    public boolean isPreviewMode(){
+        return intent != null && intent.getBooleanExtra(PREVIEW, false);
+    }
+
+    @Override
+    public boolean isConfigurationMode(){
+        return intent != null && CAPTCHA_ACTION_CONFIG.equals(intent.getAction());
+    }
+
+    @Override
+    public boolean isOperationalMode() {
+        return !isPreviewMode() && !isConfigurationMode();
+    }
+
+    @Override
+    @CaptchaMode
+    public int getMode() {
+        if (isPreviewMode()) {
+            return CaptchaMode.CAPTCHA_MODE_PREVIEW;
+        }
+        if (isConfigurationMode()) {
+            return CaptchaMode.CAPTCHA_MODE_CONFIGURATION;
+        }
+        return CaptchaMode.CAPTCHA_MODE_OPERATIONAL;
+    }
+
+    @Override
+    @SuppressWarnings("ResourceType")
+    @CaptchaDifficulty
+    public int getDifficulty(){
+        return intent != null ? intent.getIntExtra(CAPTCHA_CONFIG_DIFFICULTY, CaptchaDifficulty.VERY_SIMPLE): CaptchaDifficulty.VERY_SIMPLE;
+    }
+
+    @Override
+    @SuppressWarnings("ResourceType")
+    @SuppressAlarmMode
+    public int getSuppressAlarmMode() {
+        return intent != null ? intent.getIntExtra(CAPTCHA_CONFIG_SUPPRESS_ALARM_MODE, SuppressAlarmMode.FULL_ALARM_VOLUME): SuppressAlarmMode.FULL_ALARM_VOLUME;
+    }
+
+    protected boolean hasOperation(){
+        return intent != null && !intent.hasExtra(SleepOperation.OPERATION_NONE);
+    }
+
 
     @Override
     public CaptchaSupport setRemainingTimeListener(final @Nullable RemainingTimeListener remainingTimeListener) {

@@ -6,67 +6,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.urbandroid.sleep.captcha.annotation.CaptchaDifficulty;
 import com.urbandroid.sleep.captcha.annotation.CaptchaEvent;
-import com.urbandroid.sleep.captcha.annotation.CaptchaMode;
-import com.urbandroid.sleep.captcha.annotation.SleepOperation;
-import com.urbandroid.sleep.captcha.annotation.SuppressAlarmMode;
 import com.urbandroid.sleep.captcha.intent.IntentExtraSetter;
-
-import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_ACTION_CONFIG;
-import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_CONFIG_DIFFICULTY;
-import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_CONFIG_SUPPRESS_ALARM_MODE;
-import static com.urbandroid.sleep.captcha.CaptchaConstant.PREVIEW;
 
 public class BaseCaptchaSupport extends AbstractCaptchaSupport {
 
     protected BaseCaptchaSupport(final @NonNull Activity activity, final @NonNull Intent intent, final int aliveTimeout) {
         super(activity, intent, aliveTimeout);
-    }
-
-    @Override
-    public boolean isPreviewMode(){
-        return intent != null && intent.getBooleanExtra(PREVIEW, false);
-    }
-
-    @Override
-    public boolean isConfigurationMode(){
-        return intent != null && CAPTCHA_ACTION_CONFIG.equals(intent.getAction());
-    }
-
-    @Override
-    public boolean isOperationalMode() {
-        return !isPreviewMode() && !isConfigurationMode();
-    }
-
-    @Override
-    @CaptchaMode
-    public int getMode() {
-        if (isPreviewMode()) {
-            return CaptchaMode.CAPTCHA_MODE_PREVIEW;
-        }
-        if (isConfigurationMode()) {
-            return CaptchaMode.CAPTCHA_MODE_CONFIGURATION;
-        }
-        return CaptchaMode.CAPTCHA_MODE_OPERATIONAL;
-    }
-
-    @Override
-    @SuppressWarnings("ResourceType")
-    @CaptchaDifficulty
-    public int getDifficulty(){
-        return intent != null ? intent.getIntExtra(CAPTCHA_CONFIG_DIFFICULTY, CaptchaDifficulty.VERY_SIMPLE): CaptchaDifficulty.VERY_SIMPLE;
-    }
-
-    @Override
-    @SuppressWarnings("ResourceType")
-    @SuppressAlarmMode
-    public int getSuppressAlarmMode() {
-        return intent != null ? intent.getIntExtra(CAPTCHA_CONFIG_SUPPRESS_ALARM_MODE, SuppressAlarmMode.FULL_ALARM_VOLUME): SuppressAlarmMode.FULL_ALARM_VOLUME;
-    }
-
-    protected boolean hasOperation(){
-        return intent != null && !intent.hasExtra(SleepOperation.OPERATION_NONE);
     }
 
     @Override

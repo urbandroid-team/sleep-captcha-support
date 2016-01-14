@@ -38,9 +38,10 @@ public class CaptchaSupportFactory {
         }
 
         final boolean isCaptchaLaunchIntent = intent != null && CaptchaConstant.CAPTCHA_ACTION_LAUNCH.equals(intent.getAction());
+        final boolean isCaptchaConfigIntent = intent != null && CaptchaConstant.CAPTCHA_ACTION_CONFIG.equals(intent.getAction());
         final boolean isCaptchaSolvedCallbackIntent = intent != null && intent.hasExtra(CAPTCHA_ORIGIN_INTENT);
 
-        if (!isCaptchaLaunchIntent && !isCaptchaSolvedCallbackIntent) {
+        if (!isCaptchaLaunchIntent && !isCaptchaConfigIntent && !isCaptchaSolvedCallbackIntent ) {
             Log.w(TAG, captchaName + ": Creating FAKE PREVIEW captcha support since it is activity with no captcha launch action (" + CaptchaConstant.CAPTCHA_ACTION_LAUNCH + ")");
             final CaptchaSupport captchaSupport = new FallbackPreviewCaptchaSupport(activity, aliveTimeout);
             CaptchaSupportHolder.set(captchaSupport);
