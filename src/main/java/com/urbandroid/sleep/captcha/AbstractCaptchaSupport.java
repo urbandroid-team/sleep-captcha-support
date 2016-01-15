@@ -14,7 +14,6 @@ import com.urbandroid.sleep.captcha.annotation.CaptchaDifficulty;
 import com.urbandroid.sleep.captcha.annotation.CaptchaMode;
 import com.urbandroid.sleep.captcha.annotation.SleepOperation;
 import com.urbandroid.sleep.captcha.annotation.SuppressAlarmMode;
-import com.urbandroid.sleep.captcha.domain.CaptchaChildResult;
 import com.urbandroid.sleep.captcha.finder.BaseCaptchaFinder;
 import com.urbandroid.sleep.captcha.finder.CaptchaFinder;
 import com.urbandroid.sleep.captcha.launcher.BaseCaptchaLauncher;
@@ -25,7 +24,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_ACTION_CONFIG;
-import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_ACTION_SOLVED;
 import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_CONFIG_DIFFICULTY;
 import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_CONFIG_SUPPRESS_ALARM_MODE;
 import static com.urbandroid.sleep.captcha.CaptchaConstant.PREVIEW;
@@ -164,25 +162,6 @@ public abstract class AbstractCaptchaSupport implements CaptchaSupport {
     @Override
     public CaptchaLauncher getLauncher() {
         return launcher;
-    }
-
-    @Nullable
-    @Override
-    public CaptchaChildResult getChildResult() {
-        if (intent == null || !CAPTCHA_ACTION_SOLVED.equals(intent.getAction())) {
-            return null;
-        }
-        return new CaptchaChildResult() {
-            @Override
-            public int getCaptchaId() {
-                return intent.getIntExtra(CaptchaConstant.CAPTCHA_BACK_INFO, -1);
-            }
-
-            @Override
-            public boolean isSolved() {
-                return intent.getBooleanExtra(CaptchaConstant.SUCCESS, true);
-            }
-        };
     }
 
     private class RemainingTimeRunnable implements Runnable {

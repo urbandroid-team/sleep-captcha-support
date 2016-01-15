@@ -15,6 +15,7 @@ import com.urbandroid.sleep.captcha.annotation.SleepOperation;
 import com.urbandroid.sleep.captcha.annotation.SuppressAlarmMode;
 import com.urbandroid.sleep.captcha.domain.CaptchaInfo;
 import com.urbandroid.sleep.captcha.intent.CallbackIntentCreator;
+import com.urbandroid.sleep.captcha.intent.IntentExtraSetter;
 import com.urbandroid.sleep.captcha.util.IntentUtil;
 
 import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_ACTION_LAUNCH;
@@ -40,6 +41,7 @@ public class BaseCaptchaLauncher implements CaptchaLauncher {
     protected @CaptchaMode int mode = CaptchaMode.CAPTCHA_MODE_OPERATIONAL;
     protected @SleepOperation String operation = SleepOperation.OPERATION_NONE;
     protected CallbackIntentCreator callbackIntentCreator;
+    protected IntentExtraSetter intentExtraSetter;
     protected int flags = Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP;
     private int aliveTimeout = -1;
 
@@ -80,6 +82,12 @@ public class BaseCaptchaLauncher implements CaptchaLauncher {
     }
 
     @Override
+    public CaptchaLauncher extraSetter(@NonNull IntentExtraSetter intentExtraSetter) {
+        this.intentExtraSetter = intentExtraSetter;
+        return this;
+    }
+
+    @Override
     public CaptchaLauncher operation(final @SleepOperation String operation) {
         this.operation = operation;
         return this;
@@ -112,6 +120,9 @@ public class BaseCaptchaLauncher implements CaptchaLauncher {
                         " operation: " + operation + " " + captchaInfo);
 
         final Intent intent = prepareIntent(captchaInfo);
+        if (intentExtraSetter != null) {
+            intentExtraSetter.setExtras(intent);
+        }
         Log.d(TAG, IntentUtil.traceIntent(intent));
 
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

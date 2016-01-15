@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import com.urbandroid.sleep.captcha.annotation.CaptchaDifficulty;
 import com.urbandroid.sleep.captcha.annotation.CaptchaMode;
 import com.urbandroid.sleep.captcha.annotation.SuppressAlarmMode;
-import com.urbandroid.sleep.captcha.domain.CaptchaChildResult;
 import com.urbandroid.sleep.captcha.finder.CaptchaFinder;
 import com.urbandroid.sleep.captcha.intent.IntentExtraSetter;
 import com.urbandroid.sleep.captcha.launcher.CaptchaLauncher;
@@ -37,9 +36,6 @@ public interface CaptchaSupport {
     boolean isConfigurationMode();
 
     boolean isOperationalMode();
-
-    @Nullable
-    CaptchaChildResult getChildResult();
 
     @CaptchaMode
     int getMode();

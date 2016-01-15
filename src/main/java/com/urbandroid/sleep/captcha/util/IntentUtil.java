@@ -5,10 +5,13 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.urbandroid.sleep.captcha.CaptchaConstant;
 import com.urbandroid.sleep.captcha.CaptchaSupport;
+import com.urbandroid.sleep.captcha.domain.CaptchaChildResult;
 
 import java.util.Set;
 
+import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_ACTION_SOLVED;
 import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_CONFIG_ALIVE_TIMEOUT;
 import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_ORIGIN_INTENT;
 
@@ -90,5 +93,25 @@ public class IntentUtil {
             }
         return CaptchaSupport.DEFAULT_ALIVE_TIMEOUT_IN_SECONDS;
     }
+
+    @Nullable
+    public static CaptchaChildResult getChildResult(final @Nullable Intent intent) {
+        if (intent == null || !CAPTCHA_ACTION_SOLVED.equals(intent.getAction())) {
+            return null;
+        }
+        return new CaptchaChildResult() {
+            @Override
+            public int getCaptchaId() {
+                return intent.getIntExtra(CaptchaConstant.CAPTCHA_BACK_INFO, -1);
+            }
+
+            @Override
+            public boolean isSolved() {
+                return intent.getBooleanExtra(CaptchaConstant.SUCCESS, true);
+            }
+        };
+    }
+
+
 
 }
