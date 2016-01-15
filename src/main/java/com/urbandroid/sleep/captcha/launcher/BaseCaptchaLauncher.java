@@ -115,6 +115,7 @@ public class BaseCaptchaLauncher implements CaptchaLauncher {
         Log.d(TAG, IntentUtil.traceIntent(intent));
 
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         context.startActivity(intent);
     }
 
@@ -152,6 +153,7 @@ public class BaseCaptchaLauncher implements CaptchaLauncher {
                         callbackIntentCreator == null ?
                                 new Intent(CAPTCHA_ACTION_SOLVED)
                                         .putExtra(CAPTCHA_ORIGIN_INTENT, originIntent)
+                                        .putExtra(SUCCESS, true)
                                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                         .setClassName(context.getPackageName(), captchaClassName)
                                 :
