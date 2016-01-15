@@ -60,6 +60,7 @@ public class BaseCaptchaSupport extends AbstractCaptchaSupport {
                 break;
             case CaptchaEvent.CAPTCHA_BACK_INTENT_UNSOLVED:
                 if (!hasOperation()) {
+                    callbackIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     context.startActivity(callbackIntent);
                 }
                 break;
@@ -67,6 +68,7 @@ public class BaseCaptchaSupport extends AbstractCaptchaSupport {
                 if (hasOperation()) {
                     context.sendBroadcast(callbackIntent);
                 } else {
+                    callbackIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     context.startActivity(callbackIntent);
                 }
                 break;
