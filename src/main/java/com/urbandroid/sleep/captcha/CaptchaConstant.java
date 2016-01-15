@@ -24,6 +24,7 @@ public interface CaptchaConstant {
 
     String META_BACK_COMPATIBILITY_ID   = "com.urbandroid.sleep.captcha.meta.id";
     String META_ORDER                   = "com.urbandroid.sleep.captcha.meta.order";
+    String META_FOR_CAPTCHA             = "com.urbandroid.sleep.captcha.meta.for_captcha";
     String META_HAS_DIFFICULTY          = "com.urbandroid.sleep.captcha.meta.has_difficulty";
 
     String ALARM_SNOOZE_ACTION = "com.urbandroid.sleep.alarmclock.ALARM_SNOOZE";

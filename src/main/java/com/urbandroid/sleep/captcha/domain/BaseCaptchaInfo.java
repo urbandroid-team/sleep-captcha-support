@@ -2,20 +2,17 @@ package com.urbandroid.sleep.captcha.domain;
 
 import android.content.Context;
 import android.content.pm.ActivityInfo;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.urbandroid.sleep.captcha.CaptchaConstant;
 
 import static com.urbandroid.sleep.captcha.CaptchaConstant.META_BACK_COMPATIBILITY_ID;
+import static com.urbandroid.sleep.captcha.CaptchaConstant.META_FOR_CAPTCHA;
 import static com.urbandroid.sleep.captcha.CaptchaConstant.META_HAS_DIFFICULTY;
 import static com.urbandroid.sleep.captcha.CaptchaConstant.META_ORDER;
 
-/*
-Parcelable done by http://www.parcelabler.com/
-*/
-public class BaseCaptchaInfo implements CaptchaInfo{
+public class BaseCaptchaInfo implements CaptchaInfo {
 
     private final int id;
     private final int order;
@@ -24,7 +21,9 @@ public class BaseCaptchaInfo implements CaptchaInfo{
     private final String label;
     private final boolean isExternal;
     private final boolean hasDifficulty;
-    private boolean configurable;
+    private String configActivityName;
+
+    private transient String forCaptcha;
 
     private BaseCaptchaInfo(final Context context, final @NonNull ActivityInfo activityInfo, final @NonNull String label) {
         this.packageName = activityInfo.packageName;
@@ -40,6 +39,7 @@ public class BaseCaptchaInfo implements CaptchaInfo{
 
         this.hasDifficulty = activityInfo.metaData != null && activityInfo.metaData.getBoolean(META_HAS_DIFFICULTY);
         int order = activityInfo.metaData != null ? Math.abs(activityInfo.metaData.getInt(META_ORDER)): Integer.MAX_VALUE;
+        forCaptcha = activityInfo.metaData != null ? activityInfo.metaData.getString(META_FOR_CAPTCHA): null;
         if (isExternal || order == 0) {
             order = Integer.MAX_VALUE;
         }
@@ -80,11 +80,17 @@ public class BaseCaptchaInfo implements CaptchaInfo{
 
     @Override
     public boolean isConfigurable() {
-        return configurable;
+        return configActivityName != null;
     }
 
-    public void setConfigurable(final boolean configurable) {
-        this.configurable = configurable;
+    @Nullable
+    @Override
+    public String getConfigActivityName() {
+        return configActivityName;
+    }
+
+    public void setConfigActivityName(final @NonNull String configActivityName) {
+        this.configActivityName = configActivityName;
     }
 
     @Override
@@ -97,6 +103,10 @@ public class BaseCaptchaInfo implements CaptchaInfo{
         return order;
     }
 
+    public String getForCaptcha() {
+        return forCaptcha;
+    }
+
     @Override
     public String toString() {
         return "Captcha Info{" +
@@ -104,49 +114,18 @@ public class BaseCaptchaInfo implements CaptchaInfo{
                 ", packageName='" + packageName + '\'' +
                 ", activityName='" + activityName + '\'' +
                 ", label='" + label + '\'' +
-                ", configurable='" + configurable + '\'' +
+                ", configActivityName='" + configActivityName + '\'' +
                 ", hasDifficulty='" + hasDifficulty + '\'' +
                 ", isExternal=" + isExternal +
                 '}';
-    }
-
-    protected BaseCaptchaInfo(final Parcel in) {
-        id = in.readInt();
-        order = in.readInt();
-        packageName = in.readString();
-        activityName = in.readString();
-        label = in.readString();
-        isExternal = in.readByte() != 0x00;
-        hasDifficulty = in.readByte() != 0x00;
-        configurable = in.readByte() != 0x00;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(final Parcel dest, final int flags) {
-        dest.writeInt(id);
-        dest.writeInt(order);
-        dest.writeString(packageName);
-        dest.writeString(activityName);
-        dest.writeString(label);
-        dest.writeByte((byte) (isExternal ? 0x01 : 0x00));
-        dest.writeByte((byte) (hasDifficulty ? 0x01 : 0x00));
-        dest.writeByte((byte) (configurable ? 0x01 : 0x00));
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         BaseCaptchaInfo that = (BaseCaptchaInfo) o;
-
         return id == that.id;
-
     }
 
     @Override
@@ -154,16 +133,4 @@ public class BaseCaptchaInfo implements CaptchaInfo{
         return id;
     }
 
-    @SuppressWarnings("unused")
-    public static final Parcelable.Creator<BaseCaptchaInfo> CREATOR = new Parcelable.Creator<BaseCaptchaInfo>() {
-        @Override
-        public BaseCaptchaInfo createFromParcel(Parcel in) {
-            return new BaseCaptchaInfo(in);
-        }
-
-        @Override
-        public BaseCaptchaInfo[] newArray(int size) {
-            return new BaseCaptchaInfo[size];
-        }
-    };
 }

@@ -1,14 +1,14 @@
 package com.urbandroid.sleep.captcha.domain;
 
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.util.Comparator;
 
 /**
  * This interface represents base information about Captcha.
  */
-public interface CaptchaInfo extends Parcelable {
+public interface CaptchaInfo {
 
     int FALLBACK_ID = 1;
     int DISABLED_ID = 0;
@@ -34,6 +34,9 @@ public interface CaptchaInfo extends Parcelable {
 
     @NonNull
     String getActivityName();
+
+    @Nullable
+    String getConfigActivityName();
 
     /**
      * @return human readable captcha name/label

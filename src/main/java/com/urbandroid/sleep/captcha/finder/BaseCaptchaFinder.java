@@ -110,9 +110,12 @@ public class BaseCaptchaFinder implements CaptchaFinder {
                     resolveInfo.activityInfo,
                     resolveInfo.activityInfo.loadLabel(packageManager).toString()
             );
-            final BaseCaptchaInfo captchaInfo = findById(result, configInfo.getId());
+            BaseCaptchaInfo captchaInfo = findById(result, configInfo.getId());
+            if (captchaInfo == null) {
+                captchaInfo = findByName(result, configInfo.getForCaptcha(), configInfo.getPackageName());
+            }
             if (captchaInfo != null) {
-                captchaInfo.setConfigurable(true);
+                captchaInfo.setConfigActivityName(configInfo.getActivityName());
             }
         }
 
@@ -144,6 +147,19 @@ public class BaseCaptchaFinder implements CaptchaFinder {
         for (final CaptchaInfo info : infos) {
             if (info.getId() == id) {
                 return (BaseCaptchaInfo) info;
+            }
+        }
+        return null;
+    }
+    @Nullable
+    protected BaseCaptchaInfo findByName(final List<CaptchaInfo> infos, final @NonNull String activityName, final @NonNull String packageName) {
+
+        Log.i(TAG, "Looking for: " + activityName + " " + packageName);
+        for (final CaptchaInfo info : infos) {
+            if (info.getPackageName().equals(packageName)) {
+                if (info.getActivityName().equals(activityName) || info.getActivityName().equals(packageName + activityName)) {
+                    return (BaseCaptchaInfo) info;
+                }
             }
         }
         return null;

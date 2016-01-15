@@ -138,7 +138,7 @@ public class BaseCaptchaLauncher implements CaptchaLauncher {
         switch (mode) {
             case CaptchaMode.CAPTCHA_MODE_CONFIGURATION:
                 intent = new Intent(CaptchaConstant.CAPTCHA_ACTION_CONFIG)
-                        .setClassName(captchaInfo.getPackageName(), captchaInfo.getActivityName())
+                        .setClassName(captchaInfo.getPackageName(), captchaInfo.getConfigActivityName())
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         .putExtra(CAPTCHA_CONFIG_SUPPRESS_ALARM_MODE, suppressAlarmMode)
                         .putExtra(CAPTCHA_CONFIG_DIFFICULTY, difficulty);
