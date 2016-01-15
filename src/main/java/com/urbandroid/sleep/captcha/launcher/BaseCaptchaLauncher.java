@@ -114,6 +114,8 @@ public class BaseCaptchaLauncher implements CaptchaLauncher {
         final Intent intent = prepareIntent(captchaInfo);
         Log.d(TAG, IntentUtil.traceIntent(intent));
 
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         context.startActivity(intent);
     }
 
