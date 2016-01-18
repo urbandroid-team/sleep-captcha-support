@@ -120,14 +120,18 @@ public class BaseCaptchaLauncher implements CaptchaLauncher {
                         " operation: " + operation + " " + captchaInfo);
 
         final Intent intent = prepareIntent(captchaInfo);
+        Log.d(TAG, IntentUtil.traceIntent(intent));
+
+        context.startActivity(intent);
+    }
+
+    private Intent postProcess(final @NonNull Intent intent) {
         if (intentExtraSetter != null) {
             intentExtraSetter.setExtras(intent);
         }
-        Log.d(TAG, IntentUtil.traceIntent(intent));
-
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        context.startActivity(intent);
+        return intent;
     }
 
     @NonNull
@@ -145,7 +149,7 @@ public class BaseCaptchaLauncher implements CaptchaLauncher {
                 if (aliveTimeout != -1) {
                     intent.putExtra(CAPTCHA_CONFIG_ALIVE_TIMEOUT, aliveTimeout);
                 }
-                return intent;
+                return postProcess(intent);
 
             case CaptchaMode.CAPTCHA_MODE_PREVIEW:
                 intent = new Intent(CaptchaConstant.CAPTCHA_ACTION_LAUNCH)
@@ -157,7 +161,7 @@ public class BaseCaptchaLauncher implements CaptchaLauncher {
                 if (aliveTimeout != -1) {
                     intent.putExtra(CAPTCHA_CONFIG_ALIVE_TIMEOUT, aliveTimeout);
                 }
-                return intent;
+                return postProcess(intent);
 
             case CaptchaMode.CAPTCHA_MODE_OPERATIONAL:
                 final Intent solvedCaptchaIntent =
@@ -199,7 +203,7 @@ public class BaseCaptchaLauncher implements CaptchaLauncher {
                 if (aliveTimeout != -1) {
                     intent.putExtra(CAPTCHA_CONFIG_ALIVE_TIMEOUT, aliveTimeout);
                 }
-                return intent;
+                return postProcess(intent);
 
         }
 
