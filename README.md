@@ -20,7 +20,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.urbandroid.sleep:captcha-support:0.2.3@aar'
+    compile 'com.urbandroid.sleep:captcha-support:0.2.4@aar'
 }
 ```
 ## Captcha Manifest
@@ -42,7 +42,6 @@ Sleep as Android will not find your captcha.
             <meta-data android:name="com.urbandroid.sleep.captcha.meta.has_difficulty" android:value="true"/>
             <intent-filter>
                 <action android:name="com.urbandroid.sleep.captcha.intent.action.OPEN"/>
-                <action android:name="com.urbandroid.sleep.captcha.intent.action.CONFIG"/>
             </intent-filter>
         </activity>
     </application>
@@ -117,6 +116,51 @@ Sleep app by declaring order.
         ...
     </activity>
 ```
+
+## Captcha Configuration
+
+In case your captcha requires any kind of additional configuration you have two options
+
+### 1. Add CONFIG action into your Captcha Activity
+
+```xml
+    <activity
+        android:name=".MyCleverCaptchaActivity"
+        ...
+        >
+        <intent-filter>
+            <action android:name="com.urbandroid.sleep.captcha.intent.action.OPEN"/>
+            <action android:name="com.urbandroid.sleep.captcha.intent.action.CONFIG"/>
+        </intent-filter>
+    </activity>
+```
+When CaptchaSupport object (onCreate/onNewIntent) is created, you should check mode in which
+captcha is running. To detect mode call either isConfigurationMode() and/or isOperationalMode().
+
+### 2. Create special config activity referring to your captcha activity
+
+    <activity
+        android:name=".MyCleverCaptchaActivity"
+      ...>
+
+      <intent-filter>
+        <action android:name="com.urbandroid.sleep.captcha.intent.action.OPEN"/>
+      </intent-filter>
+    </activity>
+
+    <activity
+        android:name=".MyCleverCaptchaConfigActivity"
+      ...>
+
+      <meta-data android:name="com.urbandroid.sleep.captcha.meta.for_captcha" android:value=".MyCleverCaptchaActivity"/>
+      <intent-filter>
+        <action android:name="com.urbandroid.sleep.captcha.intent.action.CONFIG"/>
+      </intent-filter>
+    </activity>
+
+This is preferable way doing captcha configuration since it separate two aspects of captcha
+and creates less messy code handling two modes in one activity (as per case 1).
+
 
 ## Recommendation
 * Don't forget to define your activity with exported="true" and as singleTop otherwise the captcha
