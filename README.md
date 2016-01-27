@@ -158,7 +158,7 @@ captcha is running. To detect mode call either isConfigurationMode() and/or isOp
       </intent-filter>
     </activity>
 
-This is preferable way doing captcha configuration since it separate two aspects of captcha
+This is preferable way doing captcha configuration since it separates two aspects of captcha
 and creates less messy code handling two modes in one activity (as per case 1).
 
 
