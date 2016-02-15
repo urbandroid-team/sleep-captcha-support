@@ -51,6 +51,7 @@ public abstract class AbstractCaptchaSupport implements CaptchaSupport {
         this.intent = intent;
         this.finder = new BaseCaptchaFinder(context);
         this.launcher = new BaseCaptchaLauncher(context, activity.getClass().getName(), intent, aliveTimeout);
+        this.launcher.suppressAlarmMode(getSuppressAlarmMode());
         aliveTimeout(aliveTimeout);
         finishReceiver.register();
     }
