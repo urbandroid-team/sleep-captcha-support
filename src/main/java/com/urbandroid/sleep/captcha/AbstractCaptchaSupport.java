@@ -53,6 +53,7 @@ public abstract class AbstractCaptchaSupport implements CaptchaSupport {
         this.launcher = new BaseCaptchaLauncher(context, activity.getClass().getName(), intent, aliveTimeout)
             .suppressAlarmMode(getSuppressAlarmMode())
             .difficulty(getDifficulty())
+            .operation(getOperation())
             .mode(getMode());
         aliveTimeout(aliveTimeout);
         finishReceiver.register();
@@ -103,6 +104,31 @@ public abstract class AbstractCaptchaSupport implements CaptchaSupport {
         return intent != null && !intent.hasExtra(SleepOperation.OPERATION_NONE);
     }
 
+    @SleepOperation
+    private String getOperation(){
+        if (intent == null || intent.hasExtra(SleepOperation.OPERATION_NONE)) {
+            return SleepOperation.OPERATION_NONE;
+        }
+        if (intent.hasExtra(SleepOperation.DELETE_ALARM)) {
+            return SleepOperation.DELETE_ALARM;
+        }
+        if (intent.hasExtra(SleepOperation.DISABLE_ALARM)) {
+            return SleepOperation.DISABLE_ALARM;
+        }
+        if (intent.hasExtra(SleepOperation.EDIT_ALARM)) {
+            return SleepOperation.EDIT_ALARM;
+        }
+        if (intent.hasExtra(SleepOperation.EDIT_ALARM_TIME_EXTRA)) {
+            return SleepOperation.EDIT_ALARM_TIME_EXTRA;
+        }
+        if (intent.hasExtra(SleepOperation.SHOULD_SKIP)) {
+            return SleepOperation.SHOULD_SKIP;
+        }
+        if (intent.hasExtra(SleepOperation.SNOOZE_CANCELED)) {
+            return SleepOperation.SNOOZE_CANCELED;
+        }
+        return SleepOperation.OPERATION_NONE;
+    }
 
     @Override
     public CaptchaSupport setRemainingTimeListener(final @Nullable RemainingTimeListener remainingTimeListener) {
