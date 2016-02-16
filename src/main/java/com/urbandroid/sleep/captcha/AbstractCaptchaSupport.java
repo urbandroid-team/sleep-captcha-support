@@ -104,6 +104,10 @@ public abstract class AbstractCaptchaSupport implements CaptchaSupport {
 
     @Override
     public CaptchaSupport setRemainingTimeListener(final @Nullable RemainingTimeListener remainingTimeListener) {
+        if (hasOperation()) {
+            Log.w(TAG, "Sleep operation set: RemainingTimeListener will be not active");
+            return this;
+        }
         if (!isOperationalMode()) {
             Log.w(TAG, "No operational mode: RemainingTimeListener will be not active");
             return this;
