@@ -53,8 +53,8 @@ public abstract class AbstractCaptchaSupport implements CaptchaSupport {
         this.launcher = new BaseCaptchaLauncher(context, activity.getClass().getName(), intent, aliveTimeout)
             .suppressAlarmMode(getSuppressAlarmMode())
             .difficulty(getDifficulty())
-            .operation(getOperation())
-            .mode(getMode());
+            .operation(getOperation());
+            //.mode(getMode());
         aliveTimeout(aliveTimeout);
         finishReceiver.register();
     }
