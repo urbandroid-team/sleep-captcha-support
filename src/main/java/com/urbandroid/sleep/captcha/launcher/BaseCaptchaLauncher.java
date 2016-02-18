@@ -39,6 +39,7 @@ public class BaseCaptchaLauncher implements CaptchaLauncher {
     protected @CaptchaDifficulty int difficulty = CaptchaDifficulty.VERY_SIMPLE;
     protected @SuppressAlarmMode int suppressAlarmMode = SuppressAlarmMode.FULL_ALARM_VOLUME;
     protected @CaptchaMode int mode = CaptchaMode.CAPTCHA_MODE_OPERATIONAL;
+    protected @CaptchaMode int parentMode = 0;
     protected @SleepOperation String operation = SleepOperation.OPERATION_NONE;
     protected CallbackIntentCreator callbackIntentCreator;
     protected IntentExtraSetter intentExtraSetter;
@@ -111,6 +112,11 @@ public class BaseCaptchaLauncher implements CaptchaLauncher {
         return this;
     }
 
+    public CaptchaLauncher parentMode(@CaptchaMode int mode) {
+        this.parentMode = mode;
+        return this;
+    }
+
     @Override
     public void start(final @NonNull CaptchaInfo captchaInfo) {
         Log.i(TAG,
@@ -120,6 +126,9 @@ public class BaseCaptchaLauncher implements CaptchaLauncher {
                         " operation: " + operation + " " + captchaInfo);
 
         final Intent intent = prepareIntent(captchaInfo);
+        intent.putExtra(CaptchaConstant.CAPTCHA_ID, captchaInfo.getId());
+        intent.putExtra(CaptchaConstant.CAPTCHA_PARENT_ID, originIntent != null ? originIntent.getIntExtra(CaptchaConstant.CAPTCHA_ID, 0): 0);
+        intent.putExtra(CaptchaConstant.CAPTCHA_PARENT_MODE, parentMode);
         Log.d(TAG, IntentUtil.traceIntent(intent));
 
         context.startActivity(intent);

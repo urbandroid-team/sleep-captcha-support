@@ -39,6 +39,7 @@ public abstract class AbstractCaptchaSupport implements CaptchaSupport {
 
     protected int aliveTimeoutInSeconds = DEFAULT_ALIVE_TIMEOUT_IN_SECONDS;
     private long lastAliveSent = -1;
+    private final int currentCaptchaId;
 
     private final AtomicReference<RemainingTimeListener> remainingTimeListener = new AtomicReference<>();
     private final Handler handler = new Handler();
@@ -49,14 +50,36 @@ public abstract class AbstractCaptchaSupport implements CaptchaSupport {
         this.activity = activity;
         this.context = activity.getApplicationContext();
         this.intent = intent;
+        currentCaptchaId = intent != null ? intent.getIntExtra(CaptchaConstant.CAPTCHA_ID, 0): 0;
         this.finder = new BaseCaptchaFinder(context);
-        this.launcher = new BaseCaptchaLauncher(context, activity.getClass().getName(), intent, aliveTimeout)
+        final BaseCaptchaLauncher launcher = new BaseCaptchaLauncher(context, activity.getClass().getName(), intent, aliveTimeout);
+        launcher
             .suppressAlarmMode(getSuppressAlarmMode())
             .difficulty(getDifficulty())
             .operation(getOperation());
             //.mode(getMode());
+        launcher.parentMode(getParentMode());
+
+        this.launcher = launcher;
         aliveTimeout(aliveTimeout);
         finishReceiver.register();
+    }
+
+    @Override
+    public int getCurrentCaptchaId() {
+        return currentCaptchaId;
+    }
+
+    @CaptchaMode
+    public int getParentMode() {
+        int mode = intent != null?
+                intent.getIntExtra(CaptchaConstant.CAPTCHA_PARENT_MODE, 0): 0;
+        if (mode == 0) {
+            mode = getMode();
+        }
+
+        //noinspection ResourceType
+        return mode;
     }
 
     @Override
@@ -138,6 +161,10 @@ public abstract class AbstractCaptchaSupport implements CaptchaSupport {
         }
         if (!isOperationalMode()) {
             Log.w(TAG, "No operational mode: RemainingTimeListener will be not active");
+            return this;
+        }
+        if (getParentMode() == CaptchaMode.CAPTCHA_MODE_PREVIEW) {
+            Log.w(TAG, "Parent Captcha mode is preview: RemainingTimeListener will be not active");
             return this;
         }
         if (getSuppressAlarmMode() == SuppressAlarmMode.FULL_ALARM_VOLUME) {

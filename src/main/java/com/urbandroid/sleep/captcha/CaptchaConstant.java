@@ -6,6 +6,11 @@ public interface CaptchaConstant {
     String SLEEP_PACKAGE = "com.urbandroid.sleep";
 
     String CAPTCHA_BACK_INFO  = "captchaInfo";
+
+    /* parent captcha id from which current captcha was launched */
+    String CAPTCHA_PARENT_ID = "captchaParentId";
+    String CAPTCHA_PARENT_MODE = "captchaParentMode";
+    String CAPTCHA_ID  = "captchaId";
     String CAPTCHA_ORIGIN_INTENT  = "originIntent";
 
     String CAPTCHA_ACTION_LAUNCH = "com.urbandroid.sleep.captcha.intent.action.OPEN";

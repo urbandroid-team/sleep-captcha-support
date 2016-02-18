@@ -154,7 +154,7 @@ public class BaseCaptchaFinder implements CaptchaFinder {
     @Nullable
     protected BaseCaptchaInfo findByName(final List<CaptchaInfo> infos, final @NonNull String activityName, final @NonNull String packageName) {
 
-        Log.i(TAG, "Looking for: " + activityName + " " + packageName);
+        //Log.i(TAG, "Looking for: " + activityName + " " + packageName);
         for (final CaptchaInfo info : infos) {
             if (info.getPackageName().equals(packageName)) {
                 if (info.getActivityName().equals(activityName) || info.getActivityName().equals(packageName + activityName)) {

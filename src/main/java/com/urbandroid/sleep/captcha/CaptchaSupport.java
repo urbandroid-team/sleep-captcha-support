@@ -58,6 +58,8 @@ public interface CaptchaSupport {
 
     CaptchaLauncher getLauncher();
 
+    int getCurrentCaptchaId();
+
     void destroy();
 
 }
