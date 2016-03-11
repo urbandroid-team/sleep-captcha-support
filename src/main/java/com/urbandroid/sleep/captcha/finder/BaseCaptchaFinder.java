@@ -60,8 +60,9 @@ public class BaseCaptchaFinder implements CaptchaFinder {
         }
         for (final ApplicationInfo app: apps) {
             if (packageName.equals(app.packageName)) {
+                boolean isExternalStorage = (app.flags & ApplicationInfo.FLAG_EXTERNAL_STORAGE) == ApplicationInfo.FLAG_EXTERNAL_STORAGE;
                 final CharSequence label = app.loadLabel(packageManager);
-                final BaseCaptchaGroup group = new BaseCaptchaGroup(packageName, label == null ? packageName : label.toString());
+                final BaseCaptchaGroup group = new BaseCaptchaGroup(packageName, label == null ? packageName : label.toString(), isExternalStorage);
                 if (groups != null && !groups.containsKey(packageName)) {
                     groups.put(packageName, group);
                 }

@@ -17,4 +17,6 @@ public interface CaptchaGroup {
 
     CaptchaGroup add(@NonNull CaptchaInfo captchaInfo);
 
+    boolean isExternalStorage();
+
 }

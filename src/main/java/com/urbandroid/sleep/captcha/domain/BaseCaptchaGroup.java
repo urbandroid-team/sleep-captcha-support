@@ -11,14 +11,16 @@ public class BaseCaptchaGroup implements CaptchaGroup {
     private final String id;
     private final String label;
     private final List<CaptchaInfo> captchaInfos = new ArrayList<>();
+    private final boolean externalStorage;
 
-    public BaseCaptchaGroup(final @NonNull String id, final @NonNull String label) {
-        this(id, label, Collections.<CaptchaInfo>emptyList());
+    public BaseCaptchaGroup(final @NonNull String id, final @NonNull String label, final boolean externalStorage) {
+        this(id, label, Collections.<CaptchaInfo>emptyList(), externalStorage);
     }
 
-    public BaseCaptchaGroup(final @NonNull String id, final @NonNull String label, final @NonNull List<CaptchaInfo> captchaInfos) {
+    public BaseCaptchaGroup(final @NonNull String id, final @NonNull String label, final @NonNull List<CaptchaInfo> captchaInfos, final boolean externalStorage) {
         this.id = id;
         this.label = label;
+        this.externalStorage = externalStorage;
         this.captchaInfos.addAll(captchaInfos);
     }
 
@@ -32,6 +34,10 @@ public class BaseCaptchaGroup implements CaptchaGroup {
     @NonNull
     public String getLabel() {
         return label;
+    }
+
+    public boolean isExternalStorage() {
+        return externalStorage;
     }
 
     @Override
