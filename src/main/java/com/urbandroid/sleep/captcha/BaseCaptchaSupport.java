@@ -66,7 +66,8 @@ public class BaseCaptchaSupport extends AbstractCaptchaSupport {
                 }
                 break;
             case CaptchaEvent.CAPTCHA_BACK_INTENT_SOLVED:
-                if (hasOperation()) {
+                final boolean nestedCaptcha = intent.getIntExtra(CaptchaConstant.CAPTCHA_PARENT_ID, 0) != 0;
+                if (hasOperation() && !nestedCaptcha) {
                     context.sendBroadcast(callbackIntent);
                 } else {
                     callbackIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
