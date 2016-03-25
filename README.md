@@ -20,7 +20,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.urbandroid.sleep:captcha-support:0.2.8@aar'
+    compile 'com.urbandroid.sleep:captcha-support:0.3.0@aar'
 }
 ```
 ## Captcha Manifest

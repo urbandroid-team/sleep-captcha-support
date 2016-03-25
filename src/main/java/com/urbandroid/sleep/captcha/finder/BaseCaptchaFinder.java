@@ -38,7 +38,7 @@ public class BaseCaptchaFinder implements CaptchaFinder {
     public List<CaptchaGroup> findGroups(final @Nullable CaptchaInfoFilter filter) {
         final PackageManager packageManager = context.getPackageManager();
         final Map<String, CaptchaGroup> groups = new HashMap<>();
-        final List<ApplicationInfo> apps = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
+        final List<ApplicationInfo> apps = getInstalledApps(packageManager);
         for(final CaptchaInfo captcha: lookup(filter)) {
             final CaptchaGroup group = findGroup(packageManager, groups, apps, captcha.getPackageName());
             if (group != null) {
@@ -83,11 +83,11 @@ public class BaseCaptchaFinder implements CaptchaFinder {
     public List<CaptchaInfo> lookup(final @Nullable CaptchaInfoFilter filter) {
         final List<CaptchaInfo> result = new ArrayList<>();
         final PackageManager packageManager = context.getPackageManager();
-        final List<ApplicationInfo> apps = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
+        final List<ApplicationInfo> apps = getInstalledApps(packageManager);
 
         // look up all activities with action captcha launch in intent-filter
         final Intent launchCaptchaIntent = new Intent(CAPTCHA_ACTION_LAUNCH);
-        for (final ResolveInfo resolveInfo : packageManager.queryIntentActivities(launchCaptchaIntent, PackageManager.GET_META_DATA)) {
+        for (final ResolveInfo resolveInfo : queryIntent(packageManager, launchCaptchaIntent)) {
             //Log.d(TAG, "Found: " + resolveInfo);
 
             final BaseCaptchaInfo captchaInfo = BaseCaptchaInfo.build(
@@ -105,7 +105,7 @@ public class BaseCaptchaFinder implements CaptchaFinder {
 
         // look up all activities with action captcha config in intent-filter
         final Intent configCaptchaIntent = new Intent(CAPTCHA_ACTION_CONFIG);
-        for (final ResolveInfo resolveInfo : packageManager.queryIntentActivities(configCaptchaIntent, PackageManager.GET_META_DATA)) {
+        for (final ResolveInfo resolveInfo : queryIntent(packageManager, configCaptchaIntent)) {
             final BaseCaptchaInfo configInfo = BaseCaptchaInfo.build(
                     context,
                     resolveInfo.activityInfo,
@@ -164,6 +164,17 @@ public class BaseCaptchaFinder implements CaptchaFinder {
             }
         }
         return null;
+    }
+
+
+    @NonNull
+    protected List<ApplicationInfo> getInstalledApps(final PackageManager packageManager){
+        return packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
+    }
+
+    @NonNull
+    protected List<ResolveInfo> queryIntent(final PackageManager packageManager, final Intent intent){
+        return packageManager.queryIntentActivities(intent, PackageManager.GET_META_DATA);
     }
 }
 
