@@ -1,9 +1,13 @@
 buildscript {
     repositories {
         jcenter()
+        maven {
+            url 'https://maven.google.com/'
+            name 'Google'
+        }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.5.0'
+        classpath 'com.android.tools.build:gradle:3.1.0'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.2'
         classpath 'com.github.dcendents:android-maven-plugin:1.2'
     }
@@ -12,6 +16,10 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        maven {
+            url 'https://maven.google.com/'
+            name 'Google'
+        }
     }
 }
 
@@ -21,17 +29,17 @@ apply plugin: 'com.jfrog.bintray'
 ext {
     PUBLISH_GROUP_ID = 'com.urbandroid.sleep'
     PUBLISH_ARTIFACT_ID = 'captcha-support'
-    PUBLISH_VERSION = '0.3.0'
+    PUBLISH_VERSION = '0.3.1'
 }
 
 // from: 'https://raw.githubusercontent.com/blundell/release-android-library/master/android-release-aar.gradle'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion '23.0.1'
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
 
     defaultConfig {
-        minSdkVersion 9
+        minSdkVersion 14
         targetSdkVersion 23
     }
 
@@ -46,8 +54,8 @@ configurations {
 }
 
 dependencies {
-    compile 'com.android.support:support-annotations:23.1.1'
-    javadocDeps 'com.android.support:support-annotations:23.1.1'
+    compile 'com.android.support:support-annotations:27.1.0'
+    javadocDeps 'com.android.support:support-annotations:27.1.0'
 }
 
 apply from: './release-aar.gradle'

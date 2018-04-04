@@ -8,25 +8,13 @@ import android.util.Log;
 
 import com.urbandroid.sleep.captcha.CaptchaConstant;
 import com.urbandroid.sleep.captcha.CaptchaSupportException;
-import com.urbandroid.sleep.captcha.annotation.CaptchaDifficulty;
-import com.urbandroid.sleep.captcha.annotation.CaptchaEvent;
-import com.urbandroid.sleep.captcha.annotation.CaptchaMode;
-import com.urbandroid.sleep.captcha.annotation.SleepOperation;
-import com.urbandroid.sleep.captcha.annotation.SuppressAlarmMode;
+import com.urbandroid.sleep.captcha.annotation.*;
 import com.urbandroid.sleep.captcha.domain.CaptchaInfo;
 import com.urbandroid.sleep.captcha.intent.CallbackIntentCreator;
 import com.urbandroid.sleep.captcha.intent.IntentExtraSetter;
 import com.urbandroid.sleep.captcha.util.IntentUtil;
 
-import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_ACTION_LAUNCH;
-import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_ACTION_SOLVED;
-import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_BACK_INFO;
-import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_CONFIG_ALIVE_TIMEOUT;
-import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_CONFIG_DIFFICULTY;
-import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_CONFIG_SUPPRESS_ALARM_MODE;
-import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_ORIGIN_INTENT;
-import static com.urbandroid.sleep.captcha.CaptchaConstant.SUCCESS;
-import static com.urbandroid.sleep.captcha.CaptchaConstant.TAG;
+import static com.urbandroid.sleep.captcha.CaptchaConstant.*;
 import static com.urbandroid.sleep.captcha.CaptchaSupport.MAX_ALIVE_TIMEOUT_IN_SECONDS;
 import static com.urbandroid.sleep.captcha.CaptchaSupport.MIN_ALIVE_TIMEOUT_IN_SECONDS;
 
@@ -196,7 +184,7 @@ public class BaseCaptchaLauncher implements CaptchaLauncher {
                                 callbackIntentCreator.createUnsolvedIntent(context, operation);
                 unsolvedCaptchaIntent.putExtra(CAPTCHA_BACK_INFO, captchaInfo.getId());
 
-                final Intent captchaAliveIntent = new Intent(CaptchaConstant.CAPTCHA_ACTION_ALIVE);
+                final Intent captchaAliveIntent = new Intent(CaptchaConstant.CAPTCHA_ACTION_ALIVE).setPackage(context.getPackageName());
 
                 intent = new Intent(CAPTCHA_ACTION_LAUNCH)
                         .setClassName(captchaInfo.getPackageName(), captchaInfo.getActivityName())
