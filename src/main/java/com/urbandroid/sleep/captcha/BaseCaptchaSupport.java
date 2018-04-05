@@ -20,6 +20,9 @@ public class BaseCaptchaSupport extends AbstractCaptchaSupport {
         send(CaptchaEvent.CAPTCHA_BACK_INTENT_ALIVE, new IntentExtraSetter() {
             @Override
             public void setExtras(final @NonNull Intent intent) {
+                if (intent.getPackage() == null && intent.getComponent() == null) {
+                    intent.setPackage(activity.getPackageName());
+                }
                 intent.putExtra(CaptchaConstant.TIME_ADD, aliveTimeoutInSeconds);
             }
         });
@@ -46,7 +49,7 @@ public class BaseCaptchaSupport extends AbstractCaptchaSupport {
         }
 
         final Intent callbackIntent = intent != null ? (Intent) intent.getParcelableExtra(event) : null;
-        Log.i(TAG, "Calling " + event + (callbackIntent != null ? ": " + callbackIntent: ""));
+        Log.i(TAG, "Calling " + event + (callbackIntent != null ? ": " + callbackIntent + " package: " + callbackIntent.getPackage() + " component:" + callbackIntent.getComponent(): ""));
         if (callbackIntent == null) {
             return;
         }
