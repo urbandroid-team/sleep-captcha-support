@@ -5,10 +5,6 @@
 This open-source library contains classes that are useful for developing
 additional captcha into Sleep as Android application.
 
-The library is under heavy development :-), but ready for use. Check the
-[issue tracker][issues] to see what's happening.
-
-
 ## Usage
 
 When you use Gradle add the following maven repository and dependency with the latest version
