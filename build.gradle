@@ -58,10 +58,6 @@ dependencies {
     javadocDeps 'com.android.support:support-annotations:27.1.1'
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.0' //version required
-}
-
 apply from: './release-aar.gradle'
 
 
