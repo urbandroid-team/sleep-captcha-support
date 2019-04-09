@@ -185,7 +185,7 @@ public class BaseCaptchaLauncher implements CaptchaLauncher {
                                 callbackIntentCreator.createUnsolvedIntent(context, operation);
                 unsolvedCaptchaIntent.putExtra(CAPTCHA_BACK_INFO, captchaInfo.getId());
 
-                final Intent captchaAliveIntent = new Intent(CaptchaConstant.CAPTCHA_ACTION_ALIVE).setPackage(context.getPackageName());
+                final Intent captchaAliveIntent = new Intent(CaptchaConstant.CAPTCHA_ACTION_ALIVE).setPackage("com.urbandroid.sleep");
 
                 intent = new Intent(CAPTCHA_ACTION_LAUNCH)
                         .setClassName(captchaInfo.getPackageName(), captchaInfo.getActivityName())

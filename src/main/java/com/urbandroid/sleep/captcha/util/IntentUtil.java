@@ -64,8 +64,9 @@ public class IntentUtil {
                 builder.append("action: ").append(i.getAction()).append(" ");
             }
             if (i.getComponent() != null) {
-                builder.append("class: ").append(i.getComponent().getClassName());
+                builder.append("class: ").append(i.getComponent().getClassName()).append(" ");
             }
+            builder.append("package: ").append(i.getPackage()).append(" ");
             traceBundle(builder, i.getExtras(), tabs);
         }
 
