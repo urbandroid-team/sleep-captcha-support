@@ -73,9 +73,71 @@ public class BaseCaptchaSupport extends AbstractCaptchaSupport {
                 if (hasOperation() && !nestedCaptcha) {
                     context.sendBroadcast(callbackIntent);
                 } else {
-                    callbackIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    callbackIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                    context.startActivity(callbackIntent);
+
+                    try {
+                        callbackIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        callbackIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        callbackIntent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+                        callbackIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.setPackage("com.urbandroid.sleep.captchapack");
+                        Log.i(TAG, "Starting CAPTCHA 0 " + event + (callbackIntent != null ? ": " + callbackIntent + " package: " + callbackIntent.getPackage() + " component:" + callbackIntent.getComponent(): ""));
+                        activity.startActivity(callbackIntent);
+                    } catch (Exception e) {
+                        Log.e(TAG, "Failed to start CAPTCHA 0 " + e.getMessage());
+                        Intent copyIntent = new Intent(callbackIntent.getAction());
+                        try {
+                            copyIntent.addFlags(callbackIntent.getFlags());
+                            copyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            copyIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                            copyIntent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+                            copyIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            copyIntent.setComponent(callbackIntent.getComponent());
+                            copyIntent.setPackage("com.urbandroid.sleep.captchapack");
+                            copyIntent.putExtras(callbackIntent.getExtras());
+
+                            Log.i(TAG, "Starting CAPTCHA 1 " + event + (copyIntent != null ? ": " + copyIntent + " package: " + copyIntent.getPackage() + " component:" + copyIntent.getComponent(): ""));
+                            activity.startActivity(copyIntent);
+
+                        } catch (Exception e2) {
+                            Log.e(TAG, "Failed to start CAPTCHA 1 " + e2.getMessage());
+
+                            copyIntent = new Intent(callbackIntent.getAction());
+                            try {
+                                copyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                copyIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                copyIntent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+                                copyIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                copyIntent.putExtras(callbackIntent.getExtras());
+                                copyIntent.setPackage("com.urbandroid.sleep.captchapack");
+                                copyIntent.setClassName("com.urbandroid.sleep.captchapack", "com.urbandroid.sleep.captchapack.multi.InOrderCaptcha");
+                                Log.i(TAG, "Starting CAPTCHA 2 " + event + (copyIntent != null ? ": " + copyIntent + " package: " + copyIntent.getPackage() + " component:" + copyIntent.getComponent(): ""));
+                                activity.startActivity(copyIntent);
+                            } catch (Exception ex) {
+                                Log.e(TAG, "Failed to start CAPTCHA 2 " + ex.getMessage());
+
+                                copyIntent = new Intent();
+                                try {
+                                    copyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    copyIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                    copyIntent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+                                    copyIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    copyIntent.putExtras(callbackIntent.getExtras());
+                                    copyIntent.setPackage("com.urbandroid.sleep.captchapack");
+                                    copyIntent.setClassName("com.urbandroid.sleep.captchapack", "com.urbandroid.sleep.captchapack.multi.InOrderCaptcha");
+                                    Log.i(TAG, "Starting CAPTCHA 3 " + event + (copyIntent != null ? ": " + copyIntent + " package: " + copyIntent.getPackage() + " component:" + copyIntent.getComponent(): ""));
+                                    activity.startActivity(copyIntent);
+                                } catch (Exception ex2) {
+                                    Log.e(TAG, "Failed to start CAPTCHA 3 " + ex2.getMessage());
+                                }
+
+
+                            }
+
+                        }
+
+                    }
+
+
                 }
                 break;
         }

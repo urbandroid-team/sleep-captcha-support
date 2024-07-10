@@ -1,9 +1,9 @@
 // ./gradlew clean build generateRelease
-apply plugin: 'maven'
+apply plugin: 'maven-publish'
 
-def groupId = project.PUBLISH_GROUP_ID
-def artifactId = project.PUBLISH_ARTIFACT_ID
-def version = project.PUBLISH_VERSION
+def pomGroupId = project.PUBLISH_GROUP_ID
+def pomArtifactId = project.PUBLISH_ARTIFACT_ID
+def pomVersion = project.PUBLISH_VERSION
 
 def localReleaseDest = "${buildDir}/release/${version}"
 
@@ -14,31 +14,39 @@ task androidJavadocs(type: Javadoc) {
 }
 
 task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
-    classifier = 'javadoc'
+    archiveClassifier = 'javadoc'
     from androidJavadocs.destinationDir
 }
 
 task androidSourcesJar(type: Jar) {
-    classifier = 'sources'
+    archiveClassifier = 'sources'
     from android.sourceSets.main.java.srcDirs
 }
 
-uploadArchives {
-    repositories {
-        mavenDeployer {
-          pom.groupId = groupId
-          pom.artifactId = artifactId
-          pom.version = version
-          repository(url: 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath)
-//          repository(url: "file://${localReleaseDest}")
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = pomGroupId
+            artifactId = pomArtifactId
+            version = pomVersion
         }
     }
+    repositories {
+        mavenLocal()
+    }
+//        maven {
+//          pom.groupId = groupId
+//          pom.artifactId = artifactId
+//          pom.version = version
+//          repository(url: 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath)
+////          repository(url: "file://${localReleaseDest}")
+//        }
 }
 
 task zipRelease(type: Zip) {
     from localReleaseDest
-    destinationDir buildDir
-    archiveName "release-${version}.zip"
+    destinationDirectory = buildDir
+    archiveFileName = "release-${version}.zip"
 }
 
 task generateRelease {
@@ -50,8 +58,8 @@ task generateRelease {
 
 //generateRelease.dependsOn(uploadArchives)
 
-generateRelease.dependsOn(zipRelease)
-zipRelease.dependsOn(uploadArchives)
+//generateRelease.dependsOn(zipRelease)
+//zipRelease.dependsOn(uploadArchives)
 
 artifacts {
     archives androidSourcesJar

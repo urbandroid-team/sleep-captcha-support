@@ -1,10 +1,17 @@
 package com.urbandroid.sleep.captcha;
 
+import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_ACTION_CONFIG;
+import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_CONFIG_DIFFICULTY;
+import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_CONFIG_SUPPRESS_ALARM_MODE;
+import static com.urbandroid.sleep.captcha.CaptchaConstant.PREVIEW;
+
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,11 +29,6 @@ import com.urbandroid.sleep.captcha.launcher.CaptchaLauncher;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
-
-import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_ACTION_CONFIG;
-import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_CONFIG_DIFFICULTY;
-import static com.urbandroid.sleep.captcha.CaptchaConstant.CAPTCHA_CONFIG_SUPPRESS_ALARM_MODE;
-import static com.urbandroid.sleep.captcha.CaptchaConstant.PREVIEW;
 
 public abstract class AbstractCaptchaSupport implements CaptchaSupport {
 
@@ -261,6 +263,7 @@ public abstract class AbstractCaptchaSupport implements CaptchaSupport {
             activity.finish();
         }
 
+        @SuppressLint("UnspecifiedRegisterReceiverFlag")
         public void register(){
 
             if (isRegistered.get()){
@@ -271,7 +274,11 @@ public abstract class AbstractCaptchaSupport implements CaptchaSupport {
             filter.addAction(CaptchaConstant.ALARM_SNOOZE_ACTION);
             filter.addAction(CaptchaConstant.ACTION_FINISH_CAPTCHA);
             isRegistered.set(true);
-            context.registerReceiver(this, filter);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                context.registerReceiver(this, filter, Context.RECEIVER_EXPORTED);
+            } else {
+                context.registerReceiver(this, filter);
+            }
 
         }
 
